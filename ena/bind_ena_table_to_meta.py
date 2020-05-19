@@ -13,7 +13,8 @@ new_fields = [
     "library_strategy",
     "library_source",
     "library_selection",
-    "instrument",
+    "instrument_make",
+    "instrument_model",
 ]
 
 select = csv.DictReader(open(sys.argv[1]), delimiter=',')
@@ -32,7 +33,8 @@ for row in manifest:
         "library_strategy": row["library_strategy"],
         "library_source": row["library_source"],
         "library_selection": row["library_selection"],
-        "instrument": "%s %s" % (row["instrument_make"], row["instrument_model"]),
+        "instrument_make": row["instrument_make"],
+        "instrument_model": row["instrument_model"],
     }
 
 select = csv.DictReader(open(sys.argv[1]), delimiter=',')
