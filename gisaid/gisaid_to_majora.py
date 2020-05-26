@@ -10,7 +10,7 @@ for row in csv.DictReader(open(sys.argv[2]), delimiter="\t"):
 
 for row in csv.DictReader(open(sys.argv[1])):
     if row["is_uk"]:
-        gisaid_identifier = row["covv_virus_name"]
+        gisaid_identifier = row["covv_virus_name"].replace(' ', '_')
         gisaid_accession = row["covv_accession_id"]
         cogid = gisaid_identifier.split("/")[2]
         if cogid in phec_map:
