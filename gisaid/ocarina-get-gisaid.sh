@@ -1,9 +1,10 @@
-#ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private --service-name GISAID
-ocarina --env get pag --test-name 'cog-uk-high-quality-public' --task-id $1 --odelimiter , \
+source ~/.ocarina
+DATESTAMP=`date '+%Y%m%d'`
+ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private --service-name GISAID --task-wait --odelimiter , \
     --ffield-true owner_org_gisaid_opted \
     --ofield owner_org_gisaid_user submitter 'XXX' \
     --ofield consensus.current_path climb_fn 'XXX' \
-    --ofield - fn $1.gisaid.fa \
+    --ofield - fn $DATESTAMP.gisaid.fa \
     --ofield '~hCoV-19/{adm1_trans}/{central_sample_id}/2020' covv_virus_name 'XXX' \
     --ofield - covv_type betacoronavirus \
     --ofield - covv_passage Original \
@@ -28,24 +29,24 @@ ocarina --env get pag --test-name 'cog-uk-high-quality-public' --task-id $1 --od
     --ofield - covv_subm_lab 'COVID-19 Genomics UK (COG-UK) Consortium' \
     --ofield - covv_subm_lab_addr 'United Kingdom' \
     --ofield central_sample_id covv_subm_sample_id 'XXX' \
-    --ofield owner_org_gisaid_lab_list covv_authors 'XXX' 2> err | csvsort -c 'covv_subm_sample_id' > $1.csv
+    --ofield owner_org_gisaid_lab_list covv_authors 'XXX' 2> err | csvsort -c 'covv_subm_sample_id' > $DATESTAMP.csv
 
-csvcut -c climb_fn,covv_virus_name $1.csv | csvformat -T | sed 1d > $1.ls
-echo "Unique FASTA inputs" `cut -f1 $1.ls | sort | uniq | wc -l`
+csvcut -c climb_fn,covv_virus_name $DATESTAMP.csv | csvformat -T | sed 1d > $DATESTAMP.ls
+echo "Unique FASTA inputs" `cut -f1 $DATESTAMP.ls | sort | uniq | wc -l`
 
-python remove_ls_dups_for_now.py $1.ls $1.undup.ls $1.csv $1.undup.csv
+remove_ls_dups_for_now.py $DATESTAMP.ls $DATESTAMP.undup.ls $DATESTAMP.csv $DATESTAMP.undup.csv
 
-rm $1.gisaid.fa
+rm -f $DATESTAMP.gisaid.fa
 
-cat $1.undup.ls | while read fn header;
+cat $DATESTAMP.undup.ls | while read fn header;
 do
-    ../elan/bin/elan_rehead.py $fn $header >> $1.gisaid.fa;
+    elan_rehead.py $fn $header >> $DATESTAMP.gisaid.fa;
     echo $? $fn $header;
 done
 
-echo "Unique sequences output to FASTA" `grep '^>' $1.gisaid.fa | sort | uniq | wc -l`
+echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
 
-csvcut -C climb_fn $1.undup.csv > $1.gisaid.csv
-echo "Unique samples in GISAID metadata" `csvcut -c covv_subm_sample_id $1.gisaid.csv | sed 1d | wc -l`
+csvcut -C climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
+echo "Unique samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTAMP.gisaid.csv | sed 1d | wc -l`
 
-gzip $1.gisaid.fa
+gzip $DATESTAMP.gisaid.fa
