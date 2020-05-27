@@ -50,3 +50,5 @@ csvcut -C climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
 echo "Unique samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTAMP.gisaid.csv | sed 1d | wc -l`
 
 gzip $DATESTAMP.gisaid.fa
+
+cut -f1 -d',' $1.DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'
