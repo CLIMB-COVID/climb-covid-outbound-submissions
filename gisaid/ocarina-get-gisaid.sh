@@ -51,4 +51,4 @@ echo "Unique samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTA
 
 gzip $DATESTAMP.gisaid.fa
 
-cut -f1 -d',' $1.DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'
+cut -f1 -d',' $DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'
