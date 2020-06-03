@@ -13,8 +13,12 @@ new_fields = [
     "library_strategy",
     "library_source",
     "library_selection",
+    "library_primers",
+    "library_protocol",
     "instrument_make",
     "instrument_model",
+    "library_seq_kit",
+    "library_seq_protocol",
 ]
 
 select = csv.DictReader(open(sys.argv[1]), delimiter=',')
@@ -24,18 +28,23 @@ for row in select:
     compound_k = "%s-%s" % (cog, run)
     select_set.add(compound_k)
 
+def rm_none(s):
+    if not s or s == "None":
+        return None
+    return s
 
 manifest = csv.DictReader(open(sys.argv[2]), delimiter='\t')
 for row in manifest:
     compound_k = "%s-%s" % (row["central_sample_id"], row["run_name"])
-    select_dat[compound_k] = {
-        "run_name": row["run_name"],
-        "library_strategy": row["library_strategy"],
-        "library_source": row["library_source"],
-        "library_selection": row["library_selection"],
-        "instrument_make": row["instrument_make"],
-        "instrument_model": row["instrument_model"],
-    }
+    select_dat[compound_k] = { fn: rm_none(row[fn]) for fn in new_fields }
+    if not select_dat[compound_k]["library_primers"]:
+        select_dat[compound_k]["library_primers"] = rm_none(row["meta.artic.primers"])
+    if not select_dat[compound_k]["library_protocol"]:
+        select_dat[compound_k]["library_protocol"] = rm_none(row["meta.artic.protocol"])
+
+    if select_dat[compound_k]["library_primers"]:
+        if select_dat[compound_k]["library_primers"][0] == "V":
+            select_dat[compound_k]["library_primers"] = select_dat[compound_k]["library_primers"][1:]
 
 select = csv.DictReader(open(sys.argv[1]), delimiter=',')
 out = csv.DictWriter(sys.stdout, select.fieldnames + new_fields, delimiter='\t')
@@ -43,6 +52,13 @@ out.writeheader()
 for row in select:
     cog = row["published_name"].split('/')[1]
     run = row["published_name"].split(':')[1]
+
+    if row["min_ct_value"] == "0.0":
+        row["min_ct_value"] = None
+    if row["max_ct_value"] == "0.0":
+        row["max_ct_value"] = None
+
     compound_k = "%s-%s" % (cog, run)
     row.update(select_dat[compound_k])
+
     out.writerow(row)
