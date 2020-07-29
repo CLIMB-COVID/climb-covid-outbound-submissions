@@ -21,3 +21,4 @@ Select `Sequencing technology metadata` to get a TSV.
 
     gisaid_submitted_to_majora.py <gisaid.undup.tsv> > submitted.ocarina.sh
     bash submitted.ocarina.sh > submitted.ocarina.sh.log 2> /dev/null
+    outbound-gisaid-annouce.sh
