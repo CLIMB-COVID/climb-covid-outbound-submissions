@@ -15,7 +15,7 @@ ls_out = open(sys.argv[2], 'w')
 for line in f:
     fields = line.strip().split('\t')
     if head_count[fields[1]] > 1:
-        sys.stderr.write("%s suppressed as it appears more than once...\n" % fields[1])
+        sys.stderr.write("%s\tsuppressed as %s appears more than once...\n" % (fields[0], fields[1]))
         continue
     ls_out.write(line)
 ls_out.close()
@@ -29,5 +29,5 @@ for row in dr_fh:
         continue
     row["covv_authors"] = row["covv_authors"].replace("\n", ",")
     dw_fh.writerow(row)
-dr_fh.close()
-dw_fh.close()
+#dr_fh.close()
+#dw_fh.close()
