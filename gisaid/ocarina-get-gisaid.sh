@@ -2,6 +2,7 @@ source ~/.ocarina
 DATESTAMP=`date '+%Y%m%d'`
 ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private --service-name GISAID --task-wait --odelimiter , \
     --ffield-true owner_org_gisaid_opted \
+    --ofield published_name pag_name 'XXX' \
     --ofield owner_org_gisaid_user submitter 'XXX' \
     --ofield consensus.current_path climb_fn 'XXX' \
     --ofield - fn $DATESTAMP.gisaid.fa \
@@ -34,7 +35,7 @@ ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private 
 csvcut -c climb_fn,covv_virus_name $DATESTAMP.csv | csvformat -T | sed 1d > $DATESTAMP.ls
 echo "Unique FASTA inputs" `cut -f1 $DATESTAMP.ls | sort | uniq | wc -l`
 
-remove_ls_dups_for_now.py $DATESTAMP.ls $DATESTAMP.undup.ls $DATESTAMP.csv $DATESTAMP.undup.csv
+remove_ls_dups_for_now.py $DATESTAMP.ls $DATESTAMP.undup.ls $DATESTAMP.csv $DATESTAMP.undup.csv 2> $DATESTAMP.undup.log
 
 rm -f $DATESTAMP.gisaid.fa
 
@@ -46,7 +47,7 @@ done
 
 echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
 
-csvcut -C climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
+csvcut -C pag_name,climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
 echo "Unique samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTAMP.gisaid.csv | sed 1d | wc -l`
 
 gzip $DATESTAMP.gisaid.fa
