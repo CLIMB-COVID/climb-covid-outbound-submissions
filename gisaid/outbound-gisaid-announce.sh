@@ -1,5 +1,5 @@
 source ~/.ocarina
-DATESTAMP=`date '+%Y%m%d'`
+DATESTAMP=$1
 
 AUTHORS=`cut -f1 -d',' $COG_OUTBOUND_DIR/gisaid/$DATESTAMP/$DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'`
 SUBMISSIONS=`wc -l $COG_OUTBOUND_DIR/gisaid/$DATESTAMP/$DATESTAMP.gisaid.csv | cut -f1 -d' '`
