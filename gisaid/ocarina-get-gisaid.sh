@@ -1,4 +1,6 @@
+#!/usr/bin/bash
 source ~/.ocarina
+set -euo pipefail
 DATESTAMP=`date '+%Y%m%d'`
 ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private --service-name GISAID --task-wait --odelimiter , \
     --ffield-true owner_org_gisaid_opted \
