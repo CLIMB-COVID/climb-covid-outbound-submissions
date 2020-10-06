@@ -18,6 +18,5 @@ chmod 644 $COG_PUBLISHED_DIR/latest.accessions.tsv
 MSG="{'text':'
 *COG-UK accession table published* to \`$COG_PUBLISHED_DIR/latest.accessions.tsv\`'}"
 
-#curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_OUTBOUND_HOOK
-curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_TEST_HOOK
+curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_OUTBOUND_HOOK
 
