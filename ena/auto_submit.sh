@@ -6,16 +6,16 @@ source ~/.ocarina
 
 DATESTAMP=`date '+%Y%m%d'`
 
-mkdir $COG_OUTBOUND_DIR/ena/$DATESTAMP
+mkdir -p $COG_OUTBOUND_DIR/ena/$DATESTAMP
 cd $COG_OUTBOUND_DIR/ena/$DATESTAMP
 
 ocarina-get-ena.sh
 bind_ena_table_to_meta.py ena.csv $COG_PUBLISHED_DIR/majora.latest.metadata.tsv > ena.nf.csv
 
-cd $ELAN_SOFTWARE_DIR
+cd $ELAN_SOFTWARE_DIR/bam
 
 # DEHUMANIZE
-nextflow run dehuman.nf -c elan.config --manifest $COG_OUTBOUND_DIR/ena/$DATESTAMP/ena.nf.csv --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR > $COG_OUTBOUND_DIR/ena/$DATESTAMP/nextflow.stdout
+nextflow run dehuman.nf -c $ELAN_SOFTWARE_DIR/elan.config --manifest $COG_OUTBOUND_DIR/ena/$DATESTAMP/ena.nf.csv --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR > $COG_OUTBOUND_DIR/ena/$DATESTAMP/nextflow.stdout
 ret=$?
 if [ $ret -ne 0 ]; then
     lines=`tail -n 25 $COG_OUTBOUND_DIR/ena/$DATESTAMP/nextflow.stdout`
@@ -34,7 +34,7 @@ if [ $ret -ne 0 ]; then
 fi
 
 # PUBLISH
-nextflow run dehuman-post.nf -c elan.config --manifest $ELAN_DIR/staging/dh/$DATESTAMP/ascp.files.ls --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR --ascpbin $ASCP_BIN > $COG_OUTBOUND_DIR/ena/$DATESTAMP/nextflow.post.stdout
+nextflow run dehuman-post.nf -c $ELAN_SOFTWARE_DIR/elan.config --manifest $ELAN_DIR/staging/dh/$DATESTAMP/ascp.files.ls --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR --ascpbin $ASCP_BIN > $COG_OUTBOUND_DIR/ena/$DATESTAMP/nextflow.post.stdout
 ret=$?
 if [ $ret -ne 0 ]; then
     lines=`tail -n 25 $COG_OUTBOUND_DIR/ena/$DATESTAMP/nextflow.post.stdout`
