@@ -4,7 +4,7 @@ eval "$(conda shell.bash hook)"
 conda activate samstudio8
 source ~/.ocarina
 
-DATESTAMP=`date '+%Y%m%d'`
+DATESTAMP=$1
 
 mkdir -p $COG_OUTBOUND_DIR/ena/$DATESTAMP
 cd $COG_OUTBOUND_DIR/ena/$DATESTAMP
