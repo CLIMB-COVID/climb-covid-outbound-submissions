@@ -20,9 +20,9 @@ ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private 
     --ofield - covv_add_location ' ' \
     --ofield - covv_host Human \
     --ofield - covv_add_host_info ' ' \
-    --ofield - covv_gender '' \
-    --ofield - covv_patient_age '' \
-    --ofield - covv_patient_status '' \
+    --ofield - covv_gender 'unknown' \
+    --ofield - covv_patient_age 'unknown' \
+    --ofield - covv_patient_status 'unknown' \
     --ofield - covv_specimen '' \
     --ofield - covv_outbreak '' \
     --ofield - covv_last_vaccinated '' \
