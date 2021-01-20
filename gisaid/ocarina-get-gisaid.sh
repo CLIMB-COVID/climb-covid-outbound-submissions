@@ -12,23 +12,23 @@ ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private 
     --ofield - covv_type betacoronavirus \
     --ofield - covv_passage Original \
     --ofield collection_date covv_collection_date '2020' \
-    --ofield '~{adm0} / {adm1_trans}' covv_location 'XXX' \
+    --ofield '~Europe / {adm0} / {adm1_trans}' covv_location 'XXX' \
     --ofield - covv_add_location ' ' \
     --ofield - covv_host Human \
     --ofield - covv_add_host_info ' ' \
-    --ofield - covv_gender unknown \
-    --ofield - covv_patient_age unknown \
-    --ofield - covv_patient_status unknown \
-    --ofield - covv_specimen unknown \
-    --ofield - covv_outbreak unknown \
-    --ofield - covv_last_vaccinated unknown \
-    --ofield - covv_treatment unknown \
+    --ofield - covv_gender '' \
+    --ofield - covv_patient_age '' \
+    --ofield - covv_patient_status '' \
+    --ofield - covv_specimen '' \
+    --ofield - covv_outbreak '' \
+    --ofield - covv_last_vaccinated '' \
+    --ofield - covv_treatment '' \
     --ofield sequencing.platform covv_seq_technology 'XXX' \
-    --ofield - covv_assembly_method unknown \
-    --ofield - covv_coverage unknown \
+    --ofield - covv_assembly_method '' \
+    --ofield - covv_coverage '' \
     --ofield owner_org_gisaid_lab_name covv_orig_lab 'XXX' \
     --ofield owner_org_gisaid_lab_addr covv_orig_lab_addr 'XXX' \
-    --ofield central_sample_id covv_provider_sample_id unknown \
+    --ofield central_sample_id covv_provider_sample_id '' \
     --ofield - covv_subm_lab 'COVID-19 Genomics UK (COG-UK) Consortium' \
     --ofield - covv_subm_lab_addr 'United Kingdom' \
     --ofield central_sample_id covv_subm_sample_id 'XXX' \
