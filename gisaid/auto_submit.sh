@@ -12,9 +12,14 @@ cd $COG_OUTBOUND_DIR/gisaid/$DATESTAMP
 
 ocarina-get-gisaid.sh
 
-gisaid_submitted_to_majora.py $COG_OUTBOUND_DIR/gisaid/$DATESTAMP/$DATESTAMP.undup.csv > submitted.ocarina.sh
-bash submitted.ocarina.sh > submitted.ocarina.sh.log 2> /dev/null
+# Send to GISAID through new API
+gisaid_uploader -a $GISAID_AUTH CoV authenticate --cid $GISAID_REAL_CID --user $GISAID_USER --pass $GISAID_PASS
+gisaid_uploader -a $GISAID_AUTH -l submission.json CoV upload --fasta $DATESTAMP.gisaid.fa --csv $DATESTAMP.gisaid.csv --failedout $DATESTAMP.gisaid.failed.csv
 
+# Convert the GISAID response to accessions (and errors)
+submission_json_to_accession.py submission.json $DATESTAMP.covv.csv
+
+# Tell everyone what a good job we did
 outbound-gisaid-announce.sh $DATESTAMP
 
 mv $DATESTAMP.undup.csv undup.csv

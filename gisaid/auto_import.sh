@@ -8,6 +8,7 @@ set -euo pipefail
 DATESTAMP=`date '+%Y-%m-%d'`
 
 cd $COG_OUTBOUND_DIR/gisaid/latest
+
 json_to_majora.py $GISAID_LIST $COG_PUBLISHED_DIR/majora.latest.metadata.tsv $COG_OUTBOUND_DIR/gisaid/latest/undup.csv > publish.$DATESTAMP.ocarina.sh
 bash publish.$DATESTAMP.ocarina.sh > publish.$DATESTAMP.ocarina.sh.log 2> /dev/null
 
