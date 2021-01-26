@@ -43,5 +43,8 @@ for row in gisaid_csv:
     # Fix the platform name as requested by GISAID curators
     row["covv_seq_technology"] = row["covv_seq_technology"].replace('_', ' ').title()
 
+    # Remove underscore from location as requested by GISAID curators
+    row["covv_location"] = row["covv_location"].replace('_', ' ')
+
 
     out_csv.writerow(row)
