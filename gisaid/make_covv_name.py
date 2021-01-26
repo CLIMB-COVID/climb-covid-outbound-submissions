@@ -36,7 +36,7 @@ for row in gisaid_csv:
         collection_date_or_year = collected_or_received_year
 
     #TODO Future we can perhaps use this opportunity to generate alternative names for when there are multiple submissions
-    row["covv_virus_name"] = "hCoV-19/%s/%s/%d" % (row["adm1_trans"], row["central_sample_id"], collected_or_received_year)
+    row["covv_virus_name"] = "hCoV-19/%s/%s/%d" % (row["adm1_trans"].replace('_', ' '), row["central_sample_id"], collected_or_received_year)
     row["covv_collection_date"] = collection_date_or_year
 
 
