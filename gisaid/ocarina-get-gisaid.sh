@@ -27,16 +27,16 @@ ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private 
     --ofield - covv_outbreak '' \
     --ofield - covv_last_vaccinated '' \
     --ofield - covv_treatment '' \
-    --ofield sequencing.platform covv_seq_technology 'XXX' \
+    --ofield instrument_make covv_seq_technology 'XXX' \
     --ofield - covv_assembly_method '' \
     --ofield - covv_coverage '' \
-    --ofield owner_org_gisaid_lab_name covv_orig_lab 'XXX' \
-    --ofield owner_org_gisaid_lab_addr covv_orig_lab_addr 'XXX' \
+    --ofield credit_lab_name covv_orig_lab 'XXX' \
+    --ofield credit_lab_addr covv_orig_lab_addr 'XXX' \
     --ofield central_sample_id covv_provider_sample_id '' \
     --ofield - covv_subm_lab 'COVID-19 Genomics UK (COG-UK) Consortium' \
     --ofield - covv_subm_lab_addr 'United Kingdom' \
     --ofield central_sample_id covv_subm_sample_id 'XXX' \
-    --ofield owner_org_gisaid_lab_list covv_authors 'XXX' 2> err | csvsort -c 'central_sample_id' > $DATESTAMP.csv
+    --ofield credit_lab_list covv_authors 'XXX' 2> err | csvsort -c 'central_sample_id' > $DATESTAMP.csv
 
 make_covv_name.py $DATESTAMP.csv > $DATESTAMP.covv.csv
 rm $DATESTAMP.csv
