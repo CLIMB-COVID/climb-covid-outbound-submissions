@@ -48,11 +48,11 @@ remove_ls_dups_for_now.py $DATESTAMP.ls $DATESTAMP.undup.ls $DATESTAMP.covv.csv 
 
 rm -f $DATESTAMP.gisaid.fa
 
-cat $DATESTAMP.undup.ls | while read fn header;
+IFS=$'\t'; while read fn header;
 do
     elan_rehead.py $fn $header >> $DATESTAMP.gisaid.fa;
     echo $? $fn $header;
-done
+done < $DATESTAMP.undup.ls
 
 echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
 
