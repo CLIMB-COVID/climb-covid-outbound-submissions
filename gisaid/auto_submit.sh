@@ -17,7 +17,7 @@ gisaid_uploader -a $GISAID_AUTH CoV authenticate --cid $GISAID_REAL_CID --user $
 gisaid_uploader -a $GISAID_AUTH -l submission.json CoV upload --fasta $DATESTAMP.gisaid.fa --csv $DATESTAMP.gisaid.csv --failedout $DATESTAMP.gisaid.failed.csv
 
 # Convert the GISAID response to accessions (and errors)
-submission_to_accession.py --mode json submission.json $DATESTAMP.covv.csv > submit_accession.log
+submission_to_accession.py --response-mode json --response submission.json --csv $DATESTAMP.covv.csv > submit_accession.log
 
 # Tell everyone what a good job we did
 outbound-gisaid-announce.sh $DATESTAMP
