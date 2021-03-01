@@ -51,7 +51,6 @@ rm -f $DATESTAMP.gisaid.fa
 IFS=$'\t'; while read fn header;
 do
     elan_rehead.py $fn $header >> $DATESTAMP.gisaid.fa;
-    echo $? $fn $header;
 done < $DATESTAMP.undup.ls
 
 echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
