@@ -65,7 +65,7 @@ if [ ! -f "$PHASE2_OK_FLAG" ]; then
         MSG='{"text":"*COG-UK ENA pipeline* Using -resume to re-raise PHASE2 ENA submission without trashing everything. Delete today'\''s log to force a full restart."}'
         curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
     fi
-    nextflow run dehuman-post.nf -c $ELAN_SOFTWARE_DIR/elan.config --manifest $ELAN_DIR/staging/dh/$DATESTAMP/ascp.files.ls --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR --ascpbin $ASCP_BIN > $PHASE2_LOG
+    nextflow run dehuman-post.nf -c $ELAN_SOFTWARE_DIR/elan.config --manifest $ELAN_DIR/staging/dh/$DATESTAMP/ascp.files.ls --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR --ascpbin $ASCP_BIN $RESUME_FLAG > $PHASE2_LOG
     ret=$?
     if [ $ret -ne 0 ]; then
         lines=`tail -n 25 $COG_OUTBOUND_DIR/ena/$DATESTAMP/nextflow.post.stdout`
