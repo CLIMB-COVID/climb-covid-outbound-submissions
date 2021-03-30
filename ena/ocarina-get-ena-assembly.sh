@@ -12,5 +12,7 @@ ocarina --env get pag --test-name 'cog-uk-elan-minimal-qc' --pass --private --se
     --ofield consensus.pipe_name assembler 'unknown' \
     --ofield consensus.pipe_version assembler_version '' \
     --ofield alignment.mean_cov mean_cov 'unknown' \
+    --ofield qc.cog_uk_elan_minimal_qc cog_basic_qc 'XXX' \
+    --ofield qc.cog_uk_high_quality_public cog_high_qc 'XXX' \
     --ofield accession.ena-sample.primary_accession ena_sample_id '' \
     --ofield accession.ena-run.primary_accession ena_run_id '' > ena-assembly.csv 2> err
