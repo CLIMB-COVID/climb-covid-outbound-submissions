@@ -61,9 +61,12 @@ if [ $ret -ne 0 ]; then
     ...with exit status '"$ret"'
     '"\`\`\`${lines}\`\`\`"'"
     }'
-else
-    MSG='{"text":"*COG-UK ENA-A consensus pipeline* Accessions added successfully."}'
+    curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
+    exit $ret
 fi
 
+MSG='{"text":"*COG-UK ENA-A consensus pipeline* Accessions added successfully."}'
 curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
-exit $ret
+
+# Tell everyone what a good job we did
+outbound-enaconsensus-announce.sh $DATESTAMP
