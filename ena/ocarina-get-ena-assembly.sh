@@ -1,4 +1,4 @@
-ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private --service-name ENA-ASSEMBLY --task-wait --task-wait-attempts 60 --odelimiter , --mode 'ena-assembly' \
+ocarina --env get pag --test-name 'cog-uk-elan-minimal-qc' --pass --private --service-name ENA-ASSEMBLY --task-wait --task-wait-attempts 60 --odelimiter , --mode 'ena-assembly' \
     --ffield-true owner_org_ena_assembly_opted \
     --ofield credit_code credit_code 'XXX' \
     --ofield credit_lab_name center_name 'XXX' \

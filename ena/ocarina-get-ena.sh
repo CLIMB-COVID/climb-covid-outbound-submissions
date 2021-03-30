@@ -1,4 +1,4 @@
-ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private --service-name ENA-RUN --task-wait --task-wait-attempts 60 --odelimiter , \
+ocarina --env get pag --test-name 'cog-uk-elan-minimal-qc' --pass --private --service-name ENA-RUN --task-wait --task-wait-attempts 60 --odelimiter , \
     --ffield-true owner_org_ena_opted \
     --ofield '~COG-UK/{central_sample_id}' ena_sample_name 'XXX' \
     --ofield central_sample_id central_sample_id 'XXX' \
