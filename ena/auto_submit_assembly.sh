@@ -29,7 +29,7 @@ if [ ! -f "$PHASE1_OK_FLAG" ]; then
         MSG='{"text":"*COG-UK ENA-A consensus pipeline* Using -resume to re-raise without trashing everything. Delete today'\''s log to force a full restart."}'
         curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
     fi
-    nextflow run samstudio8/elan-ena-nextflow -r stable --study $COG_ENA_STUDY --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp --description 'COG_ACCESSION:${-> row.published_name}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' $RESUME_FLAG > $PHASE1_LOG
+    nextflow run samstudio8/elan-ena-nextflow -c $ELAN_SOFTWARE_DIR/elan.ena_a.config -r stable --study $COG_ENA_STUDY --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp --description 'COG_ACCESSION:${-> row.published_name}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' $RESUME_FLAG > $PHASE1_LOG
     ret=$?
     if [ $ret -ne 0 ]; then
         lines=`tail -n 25 $PHASE1_LOG`
