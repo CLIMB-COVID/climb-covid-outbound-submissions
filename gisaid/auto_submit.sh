@@ -7,7 +7,7 @@ set -euo pipefail
 
 DATESTAMP=`date '+%Y%m%d'`
 
-mkdir $COG_OUTBOUND_DIR/gisaid/$DATESTAMP
+mkdir -p $COG_OUTBOUND_DIR/gisaid/$DATESTAMP
 cd $COG_OUTBOUND_DIR/gisaid/$DATESTAMP
 
 ocarina-get-gisaid.sh
