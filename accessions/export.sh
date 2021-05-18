@@ -20,3 +20,5 @@ MSG="{'text':'
 
 curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_OUTBOUND_HOOK
 
+# Dump to s3
+s3cmd put --acl-public $COG_PUBLISHED_DIR/latest.accessions.tsv s3://cog-uk/accessions/latest.tsv
