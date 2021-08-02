@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+source ~/.path
 eval "$(conda shell.bash hook)"
 conda activate samstudio8
 source ~/.ocarina
