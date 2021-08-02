@@ -60,6 +60,10 @@ for row in select:
         row["max_ct_value"] = None
 
     compound_k = "%s-%s" % (cog, run)
-    row.update(select_dat[compound_k])
+
+    try:
+        row.update(select_dat[compound_k])
+    except KeyError:
+        continue # ship
 
     out.writerow(row)
