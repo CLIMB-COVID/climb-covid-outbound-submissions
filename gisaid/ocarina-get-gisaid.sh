@@ -2,7 +2,8 @@
 source ~/.ocarina
 set -euo pipefail
 DATESTAMP=$1
-ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private --service-name GISAID --task-wait --task-wait-attempts 30 --odelimiter , \
+BEFORE_DATESTAMP=$2
+ocarina --env get pag --test-name 'cog-uk-high-quality-public' --pass --private --service-name GISAID --task-wait --task-wait-attempts 30 --odelimiter , --published-before $BEFORE_DATESTAMP \
     --ffield-true owner_org_gisaid_opted \
     --ofield central_sample_id central_sample_id 'XXX' \
     --ofield adm1_trans adm1_trans 'XXX' \

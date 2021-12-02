@@ -1,22 +1,27 @@
 #!/usr/bin/bash
 source ~/.bootstrap.sh
 eval "$(conda shell.bash hook)"
-conda activate samstudio8
 
 source "$EAGLEOWL_CONF/ocarina.env"
 source "$EAGLEOWL_CONF/gisaid.env"
 source "$EAGLEOWL_CONF/paths.env"
 source "$EAGLEOWL_CONF/slack.env"
+source "$EAGLEOWL_CONF/envs.env"
+
+conda activate $CONDA_OUTBOUND
+
 set -euo pipefail
 
 DATESTAMP=$1
+BEFORE_DATESTAMP=`date -d "$1 -7 days" '+%Y-%m-%d'`
+echo $DATESTAMP $BEFORE_DATESTAMP
 
 OUTDIR=$COG_OUTBOUND_DIR/gisaid/$DATESTAMP
 mkdir -p $OUTDIR
 cd $OUTDIR
 
 if [ ! -f "$DATESTAMP.gisaid.csv" ]; then
-    ocarina-get-gisaid.sh $DATESTAMP
+    ocarina-get-gisaid.sh $DATESTAMP $BEFORE_DATESTAMP
 else
     echo "ocarina already done"
 fi
@@ -67,7 +72,7 @@ if [ $gisaidret -ne 0 ]; then
     if [ $subret -eq 0 ]; then
         # Only rename the submission files if the accession submission was OK
         mv submission.json submission.json.$EXT # try submitting again
-        mv submission.bk.json submission.bk.json.$EXT
+        mv submission.bk.json submission.bk.json.$EXT # currently works with hacked gisaid_uploader
     fi
 fi
 
