@@ -2,7 +2,6 @@
 source ~/.bootstrap.sh
 eval "$(conda shell.bash hook)"
 
-source "$EAGLEOWL_CONF/ocarina.env"
 source "$EAGLEOWL_CONF/gisaid.env"
 source "$EAGLEOWL_CONF/paths.env"
 source "$EAGLEOWL_CONF/slack.env"
