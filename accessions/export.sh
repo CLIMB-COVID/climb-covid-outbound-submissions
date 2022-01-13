@@ -1,8 +1,16 @@
 #!/usr/bin/bash
 
+source ~/.bootstrap.sh
+PATH=$PATH:$COGPUSH_ACCESSION_BIN_DIR
+
+source "$EAGLEOWL_CONF/paths.env"
+source "$EAGLEOWL_CONF/envs.env"
+#source "$EAGLEOWL_CONF/slack.env"
+source "$EAGLEOWL_CONF/service_outbound.env"
+
 eval "$(conda shell.bash hook)"
-conda activate samstudio8
-source ~/.ocarina
+conda activate $CONDA_OUTBOUND
+
 set -euo pipefail
 
 DATESTAMP=`date '+%Y-%m-%d'`
