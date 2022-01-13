@@ -1,12 +1,14 @@
 #!/usr/bin/bash
 source ~/.bootstrap.sh
-eval "$(conda shell.bash hook)"
-conda activate samstudio8
 
-source "$EAGLEOWL_CONF/ocarina.env"
-source "$EAGLEOWL_CONF/webin.env"
+source "$EAGLEOWL_CONF/webin.env" # adds to PATH and WEBIN vars
 source "$EAGLEOWL_CONF/paths.env"
 source "$EAGLEOWL_CONF/slack.env"
+source "$EAGLEOWL_CONF/envs.env"
+source "$EAGLEOWL_CONF/service_outbound.env"
+
+eval "$(conda shell.bash hook)"
+conda activate $CONDA_OUTBOUND
 
 DATESTAMP=$1
 WEBIN_JAR="$WEBIN_DIR/webin-cli-4.2.1.jar"

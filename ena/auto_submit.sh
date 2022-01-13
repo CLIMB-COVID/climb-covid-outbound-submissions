@@ -1,8 +1,14 @@
 #!/usr/bin/bash
-source ~/.path
+source ~/.bootstrap.sh
+
+source "$EAGLEOWL_CONF/webin.env" # adds PATH and WEBIN vars
+source "$EAGLEOWL_CONF/paths.env"
+source "$EAGLEOWL_CONF/slack.env"
+source "$EAGLEOWL_CONF/envs.env"
+source "$EAGLEOWL_CONF/service_outbound.env"
+
 eval "$(conda shell.bash hook)"
-conda activate samstudio8
-source ~/.ocarina
+conda activate $CONDA_OUTBOUND
 
 DATESTAMP=$1
 
@@ -29,7 +35,7 @@ if [ ! -f "$PHASE1_OK_FLAG" ]; then
         MSG='{"text":"*COG-UK ENA pipeline* Using -resume to re-raise PHASE1 DH without trashing everything. Delete today'\''s log to force a full restart."}'
         curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
     fi
-    nextflow run dehuman.nf -c $ELAN_SOFTWARE_DIR/elan.config --manifest $COG_OUTBOUND_DIR/ena/$DATESTAMP/ena.nf.csv --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR $RESUME_FLAG > $PHASE1_LOG
+    $NEXTFLOW_BIN run dehuman.nf -c $ELAN_SOFTWARE_DIR/elan.config --manifest $COG_OUTBOUND_DIR/ena/$DATESTAMP/ena.nf.csv --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR $RESUME_FLAG > $PHASE1_LOG
     ret=$?
     if [ $ret -ne 0 ]; then
         lines=`tail -n 25 $COG_OUTBOUND_DIR/ena/$DATESTAMP/nextflow.stdout`
@@ -65,7 +71,7 @@ if [ ! -f "$PHASE2_OK_FLAG" ]; then
         MSG='{"text":"*COG-UK ENA pipeline* Using -resume to re-raise PHASE2 ENA submission without trashing everything. Delete today'\''s log to force a full restart."}'
         curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
     fi
-    nextflow run dehuman-post.nf -c $ELAN_SOFTWARE_DIR/elan.config --manifest $ELAN_DIR/staging/dh/$DATESTAMP/ascp.files.ls --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR --ascpbin $ASCP_BIN $RESUME_FLAG > $PHASE2_LOG
+    $NEXTFLOW_BIN run dehuman-post.nf -c $ELAN_SOFTWARE_DIR/elan.config --manifest $ELAN_DIR/staging/dh/$DATESTAMP/ascp.files.ls --datestamp $DATESTAMP --study PRJEB37886 --publish $ELAN_DIR --ascpbin $ASCP_BIN $RESUME_FLAG > $PHASE2_LOG
     ret=$?
     if [ $ret -ne 0 ]; then
         lines=`tail -n 25 $COG_OUTBOUND_DIR/ena/$DATESTAMP/nextflow.post.stdout`
