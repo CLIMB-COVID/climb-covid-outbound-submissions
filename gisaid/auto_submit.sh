@@ -1,12 +1,12 @@
 #!/usr/bin/bash
 source ~/.bootstrap.sh
-eval "$(conda shell.bash hook)"
 
 source "$EAGLEOWL_CONF/gisaid.env"
 source "$EAGLEOWL_CONF/paths.env"
 source "$EAGLEOWL_CONF/slack.env"
 source "$EAGLEOWL_CONF/envs.env"
 
+eval "$(conda shell.bash hook)"
 conda activate $CONDA_OUTBOUND
 
 set -euo pipefail
@@ -93,11 +93,11 @@ tail -n2 submit_accession.log
 if [ ! -f "announce.ok" ]; then
     # Tell everyone what a good job we did
     outbound-gisaid-announce.sh $DATESTAMP
+    mv $DATESTAMP.undup.csv undup.csv
+    ln -fn -s $COG_OUTBOUND_DIR/gisaid/$DATESTAMP $COG_OUTBOUND_DIR/gisaid/latest
     touch announce.ok
 fi
 
-mv $DATESTAMP.undup.csv undup.csv
-ln -fn -s $COG_OUTBOUND_DIR/gisaid/$DATESTAMP $COG_OUTBOUND_DIR/gisaid/latest
 
 MSG='{"text":"*COG-UK GISAID submission pipeline finished*"}'
 curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
