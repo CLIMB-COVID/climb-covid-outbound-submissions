@@ -1,4 +1,7 @@
-source ~/.ocarina
+source ~/.bootstrap.sh
+
+source "$EAGLEOWL_CONF/paths.env"
+source "$EAGLEOWL_CONF/slack.env"
 DATESTAMP=$1
 
 AUTHORS=`cut -f1 -d',' $COG_OUTBOUND_DIR/gisaid/$DATESTAMP/$DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'`
