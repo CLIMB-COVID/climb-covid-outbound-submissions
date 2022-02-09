@@ -6,6 +6,7 @@ source "$EAGLEOWL_CONF/paths.env"
 source "$EAGLEOWL_CONF/slack.env"
 source "$EAGLEOWL_CONF/envs.env"
 source "$EAGLEOWL_CONF/service_outbound.env"
+export PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/ena"
 
 eval "$(conda shell.bash hook)"
 conda activate $CONDA_OUTBOUND

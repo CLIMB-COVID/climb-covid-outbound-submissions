@@ -1,7 +1,6 @@
 #!/usr/bin/bash
 
 source ~/.bootstrap.sh
-PATH=$PATH:$COGPUSH_ACCESSION_BIN_DIR
 
 source "$EAGLEOWL_CONF/paths.env"
 source "$EAGLEOWL_CONF/envs.env"
@@ -18,7 +17,7 @@ DATESTAMP=`date '+%Y-%m-%d'`
 cd $COG_OUTBOUND_DIR/accessions
 ocarina --env --oauth get dataview --mdv COG2 -o cog2.mdv.json --task-wait --task-wait-attempts 60
 
-accessions_json_to_tsv.py cog2.mdv.json 'GISAID,ENA-SAMPLE,ENA-RUN,ENA-ASSEMBLY' > $DATESTAMP.accessions.tsv
+$OUTBOUND_SOFTWARE_DIR/accessions/accessions_json_to_tsv.py cog2.mdv.json 'GISAID,ENA-SAMPLE,ENA-RUN,ENA-ASSEMBLY' > $DATESTAMP.accessions.tsv
 
 cp $DATESTAMP.accessions.tsv $COG_PUBLISHED_DIR/latest.accessions.tsv
 chmod 644 $COG_PUBLISHED_DIR/latest.accessions.tsv
