@@ -1,11 +1,11 @@
 #!/usr/bin/bash
-
-source ~/.bootstrap.sh
-source "$EAGLEOWL_CONF/paths.env"
-PATH=$PATH:$ELAN_BIN_DIR:$COGPUSH_GISAID_BIN_DIR
-source "$EAGLEOWL_CONF/service_outbound.env"
+source /cephfs/covid/software/eagle-owl/scripts/hootstrap.sh
+source "$EAGLEOWL_CONF/common.sh"
+source "$EAGLEOWL_CONF/ocarina/service_outbound.sh"
+PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/gisaid"
 
 set -euo pipefail
+
 DATESTAMP=$1
 BEFORE_DATESTAMP=$2
 ocarina --env --oauth get pag --test-name 'cog-uk-high-quality-public' --pass --private --service-name GISAID --task-wait --task-wait-attempts 30 --odelimiter , --published-before $BEFORE_DATESTAMP \

@@ -1,11 +1,14 @@
-source ~/.bootstrap.sh
+source /cephfs/covid/software/eagle-owl/scripts/hootstrap.sh
+source "$EAGLEOWL_CONF/common.sh"
+source "$EAGLEOWL_CONF/slack.sh"
+PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/gisaid"
 
-source "$EAGLEOWL_CONF/paths.env"
-source "$EAGLEOWL_CONF/slack.env"
+set -euo pipefail
+
 DATESTAMP=$1
 
-AUTHORS=`cut -f1 -d',' $COG_OUTBOUND_DIR/gisaid/$DATESTAMP/$DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'`
-SUBMISSIONS=`wc -l $COG_OUTBOUND_DIR/gisaid/$DATESTAMP/$DATESTAMP.gisaid.csv | cut -f1 -d' '`
+AUTHORS=`cut -f1 -d',' $OUTBOUND_DIR/gisaid/$DATESTAMP/$DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'`
+SUBMISSIONS=`wc -l $OUTBOUND_DIR/gisaid/$DATESTAMP/$DATESTAMP.gisaid.csv | cut -f1 -d' '`
 SUBMISSIONS=$((SUBMISSIONS-1))
 
 MSG='{"text":"<!channel>
