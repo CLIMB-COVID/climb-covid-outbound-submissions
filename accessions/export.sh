@@ -12,7 +12,7 @@ set -euo pipefail
 DATESTAMP=`date '+%Y-%m-%d'`
 
 cd $ARTIFACTS_ROOT/accessions
-ocarina --env --oauth get dataview --mdv COG2 -o cog2.mdv.json --task-wait --task-wait-attempts 60
+ocarina --env --oauth get dataview --mdv COG2 -o cog2.mdv.json --task-wait --task-wait-attempts 100
 
 $OUTBOUND_SOFTWARE_DIR/accessions/accessions_json_to_tsv.py cog2.mdv.json 'GISAID,ENA-SAMPLE,ENA-RUN,ENA-ASSEMBLY' > $DATESTAMP.accessions.tsv
 
