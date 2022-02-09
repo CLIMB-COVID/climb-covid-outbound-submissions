@@ -11,8 +11,8 @@ conda activate $CONDA_OUTBOUND
 
 set -euo pipefail
 
-DATESTAMP=$1
-BEFORE_DATESTAMP=`date -d "$1 -7 days" '+%Y-%m-%d'`
+DATESTAMP=$GISAID_DATE
+BEFORE_DATESTAMP=`date -d "$DATESTAMP -7 days" '+%Y-%m-%d'`
 echo $DATESTAMP $BEFORE_DATESTAMP
 
 OUTDIR=$OUTBOUND_DIR/gisaid/$DATESTAMP
