@@ -1,12 +1,10 @@
 #!/usr/bin/bash
-source ~/.bootstrap.sh
-
-source "$EAGLEOWL_CONF/gisaid.env"
-source "$EAGLEOWL_CONF/paths.env"
-source "$EAGLEOWL_CONF/slack.env"
-source "$EAGLEOWL_CONF/envs.env"
-source "$EAGLEOWL_CONF/service_outbound.env"
-export PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/gisaid"
+source /cephfs/covid/software/eagle-owl/scripts/hootstrap.sh
+source "$EAGLEOWL_CONF/common.sh"
+source "$EAGLEOWL_CONF/slack.sh"
+source "$EAGLEOWL_CONF/outbound/gisaid.sh"
+source "$EAGLEOWL_CONF/ocarina/service_outbound.sh"
+PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/gisaid"
 
 eval "$(conda shell.bash hook)"
 conda activate $CONDA_OUTBOUND
@@ -17,7 +15,7 @@ DATESTAMP=$1
 BEFORE_DATESTAMP=`date -d "$1 -7 days" '+%Y-%m-%d'`
 echo $DATESTAMP $BEFORE_DATESTAMP
 
-OUTDIR=$COG_OUTBOUND_DIR/gisaid/$DATESTAMP
+OUTDIR=$OUTBOUND_DIR/gisaid/$DATESTAMP
 mkdir -p $OUTDIR
 cd $OUTDIR
 
@@ -32,11 +30,11 @@ fi
 # but it's easier than having to post-process the GISAID CSV to remove the successful candidates (and determine whether the failed ones should be resent)
 gisaidret=0
 if [ ! -f "submission.json" ]; then
-    gisaid_uploader -a $GISAID_AUTH CoV authenticate --cid $GISAID_REAL_CID --user $GISAID_USER --pass $GISAID_PASS
+    gisaid_uploader -a $EAGLEOWL_TOKENS/GISAID_AUTH CoV authenticate --cid $GISAID_REAL_CID --user $GISAID_USER --pass $GISAID_PASS
 
     set +e
     # Allow for failure to make sure that submissions are submitted in the case of partial failure
-    gisaid_uploader -a $GISAID_AUTH -l submission.json -L submission.bk.json CoV upload --fasta $DATESTAMP.gisaid.fa --csv $DATESTAMP.gisaid.csv --failedout $DATESTAMP.gisaid.failed.csv
+    gisaid_uploader -a $EAGLEOWL_TOKENS/GISAID_AUTH -l submission.json -L submission.bk.json CoV upload --fasta $DATESTAMP.gisaid.fa --csv $DATESTAMP.gisaid.csv --failedout $DATESTAMP.gisaid.failed.csv
     gisaidret=$?
     set -e
 else
@@ -96,7 +94,7 @@ if [ ! -f "announce.ok" ]; then
     # Tell everyone what a good job we did
     outbound-gisaid-announce.sh $DATESTAMP
     mv $DATESTAMP.undup.csv undup.csv
-    ln -fn -s $COG_OUTBOUND_DIR/gisaid/$DATESTAMP $COG_OUTBOUND_DIR/gisaid/latest
+    ln -fn -s $OUTBOUND_DIR/gisaid/$DATESTAMP $OUTBOUND_DIR/gisaid/latest
     touch announce.ok
 fi
 
