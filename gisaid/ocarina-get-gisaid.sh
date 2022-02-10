@@ -2,7 +2,7 @@
 source /cephfs/covid/software/eagle-owl/scripts/hootstrap.sh
 source "$EAGLEOWL_CONF/common.sh"
 source "$EAGLEOWL_CONF/ocarina/service_outbound.sh"
-PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/gisaid"
+PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/gisaid:$ELAN_SOFTWARE_DIR/bin" # elan dir has rehead
 
 set -euo pipefail
 
