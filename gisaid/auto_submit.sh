@@ -11,7 +11,7 @@ conda activate $CONDA_OUTBOUND
 
 set -euo pipefail
 
-DATESTAMP=$GISAID_DATE
+DATESTAMP=$ELAN_DATE
 BEFORE_DATESTAMP=`date -d "$DATESTAMP -7 days" '+%Y-%m-%d'`
 echo $DATESTAMP $BEFORE_DATESTAMP
 
