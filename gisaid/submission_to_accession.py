@@ -48,24 +48,33 @@ def send_accession(publish_group, accession_id, strain_id, subm_date=None):
         print("[OKAY] %s:%s" % (publish_group, accession_id))
     return success
 
+def do_json_record(record):
+    record_type = record.get("code")
+    if not record_type:
+        return
+
+    if record_type == "epi_isl_id":
+        strain_id, accession_id = record["msg"].split(";")
+
+        publish_group = strain_to_pag_map.get(strain_id)
+        send_accession(publish_group, accession_id, strain_id)
+
+    elif record_type == "validation_error":
+        strain_id, error = record["msg"].split(";", 1)
+        print("[FAIL] Validation error encountered: %s, %s" % (strain_id, error))
+    elif record_type.endswith("_count"):
+        print(record_type + ':' + record["msg"])
+
 if args.response_mode.lower() == "json":
-    json = json.load(open(args.response))
-    for record in json:
-        record_type = record.get("code")
-        if not record_type:
-            continue
+    j = json.load(open(args.response))
+    for record in j:
+        do_json_record(record)
 
-        if record_type == "epi_isl_id":
-            strain_id, accession_id = record["msg"].split(";")
-
-            publish_group = strain_to_pag_map.get(strain_id)
-            send_accession(publish_group, accession_id, strain_id)
-
-        elif record_type == "validation_error":
-            strain_id, error = record["msg"].split(";", 1)
-            print("[FAIL] Validation error encountered: %s, %s" % (strain_id, error))
-        elif record_type.endswith("_count"):
-            print(record_type + ':' + record["msg"])
+elif args.response_mode.lower() == "json-bk":
+    with open(args.response) as response_fh:
+        for line in response_fh:
+            j = json.loads(line.strip())
+            do_json_record(j)
 
 elif args.response_mode.lower() == "tsv":
     with open(args.response) as tsv_fh:
