@@ -1,4 +1,7 @@
 #!/usr/bin/bash
+# NotImplementedError
+exit 78 # EX_CONFIG
+
 source ~/.bootstrap.sh
 
 source "$EAGLEOWL_CONF/webin.env" # adds PATH and WEBIN vars

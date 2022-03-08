@@ -1,8 +1,10 @@
 #!/usr/bin/bash
-source ~/.bootstrap.sh
-source "$EAGLEOWL_CONF/service_outbound.env"
+source /cephfs/covid/software/eagle-owl/scripts/hootstrap.sh
+source "$EAGLEOWL_CONF/common.sh"
+source "$EAGLEOWL_CONF/ocarina/service_outbound.sh"
 
-ocarina --env get pag --test-name 'cog-uk-elan-minimal-qc' --pass --private --service-name ENA-ASSEMBLY --task-wait --task-wait-attempts 60 --odelimiter , --mode 'ena-assembly' \
+set -euo pipefail
+ocarina --env --oauth get pag --test-name 'cog-uk-elan-minimal-qc' --pass --private --service-name ENA-ASSEMBLY --task-wait --task-wait-attempts 60 --odelimiter , --mode 'ena-assembly' \
     --ffield-true owner_org_ena_assembly_opted \
     --ofield credit_code credit_code 'XXX' \
     --ofield credit_lab_name center_name 'XXX' \

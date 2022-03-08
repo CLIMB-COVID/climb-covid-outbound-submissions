@@ -1,21 +1,19 @@
 #!/usr/bin/bash
-source ~/.bootstrap.sh
-
-source "$EAGLEOWL_CONF/webin.env" # adds to PATH and WEBIN vars
-source "$EAGLEOWL_CONF/paths.env"
-source "$EAGLEOWL_CONF/slack.env"
-source "$EAGLEOWL_CONF/envs.env"
-source "$EAGLEOWL_CONF/service_outbound.env"
-export PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/ena"
+source /cephfs/covid/software/eagle-owl/scripts/hootstrap.sh
+source "$EAGLEOWL_CONF/common.sh"
+source "$EAGLEOWL_CONF/slack.sh"
+source "$EAGLEOWL_CONF/outbound/webin.sh"
+source "$EAGLEOWL_CONF/ocarina/service_outbound.sh"
+PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/ena:$EAGLEOWL/ware/ascp/cli/bin"
 
 eval "$(conda shell.bash hook)"
 conda activate $CONDA_OUTBOUND
 
 DATESTAMP=$1
-WEBIN_JAR="$WEBIN_DIR/webin-cli-4.2.1.jar"
+WEBIN_JAR="$WEBIN_DIR/webin-cli-4.3.0.jar"
 
-mkdir -p $COG_OUTBOUND_DIR/ena-a/$DATESTAMP
-OUTDIR=$COG_OUTBOUND_DIR/ena-a/$DATESTAMP
+mkdir -p $OUTBOUND_DIR/ena-a/$DATESTAMP
+OUTDIR=$OUTBOUND_DIR/ena-a/$DATESTAMP
 cd $OUTDIR
 
 if [ ! -f "erz.nf.csv" ]; then
@@ -38,7 +36,7 @@ if [ ! -f "$PHASE1_OK_FLAG" ]; then
         MSG='{"text":"*COG-UK ENA-A consensus pipeline* Using -resume to re-raise without trashing everything. Delete today'\''s log to force a full restart."}'
         curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
     fi
-    $NEXTFLOW_BIN run samstudio8/elan-ena-nextflow -c $ELAN_SOFTWARE_DIR/elan.ena_a.config -r stable --study $COG_ENA_STUDY --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp --description 'COG_ACCESSION:${-> row.published_name}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' $RESUME_FLAG > $PHASE1_LOG
+    $NEXTFLOW_BIN run samstudio8/elan-ena-nextflow -c $EAGLEOWL_CONF/outbound/ena_assembly.nextflow.conf -r stable --study $COG_ENA_STUDY --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp --description 'COG_ACCESSION:${-> row.published_name}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' $RESUME_FLAG > $PHASE1_LOG
     ret=$?
     if [ $ret -ne 0 ]; then
         lines=`tail -n 25 $PHASE1_LOG`
