@@ -21,6 +21,7 @@ cd $OUTDIR
 
 if [ ! -f "$DATESTAMP.gisaid.csv" ]; then
     ocarina-get-gisaid.sh $DATESTAMP $BEFORE_DATESTAMP
+    echo "Ocarina-get-gisaid finished successfully"
 else
     echo "ocarina already done"
 fi
@@ -31,12 +32,14 @@ fi
 gisaidret=0
 if [ ! -f "submission.json" ]; then
     gisaid_uploader -a $EAGLEOWL_TOKENS/GISAID_AUTH CoV authenticate --cid $GISAID_REAL_CID --user $GISAID_USER --pass $GISAID_PASS
-
+    
     set +e
     # Allow for failure to make sure that submissions are submitted in the case of partial failure
     gisaid_uploader -a $EAGLEOWL_TOKENS/GISAID_AUTH -l submission.json -L submission.bk.json CoV upload --fasta $DATESTAMP.gisaid.fa --csv $DATESTAMP.gisaid.csv --failedout $DATESTAMP.gisaid.failed.csv
     gisaidret=$?
     set -e
+    
+    echo "gisaid uploader finished successfully"
 else
     echo "gisaid already done"
 fi
@@ -48,6 +51,7 @@ if [ -f "submission.json" ]; then
         submission_to_accession.py --response-mode json --response submission.json --csv $DATESTAMP.covv.csv > submit_accession.log
         subret=$?
         set -e
+        echo "submit_accession done"
     else
         subret=0 # submit_accession.log still exists so we're probably good (we move it if its bad)
         echo "majora already done"
