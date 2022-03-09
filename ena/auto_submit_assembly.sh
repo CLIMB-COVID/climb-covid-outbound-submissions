@@ -25,7 +25,7 @@ fi
 PHASE1_OK_FLAG="$OUTDIR/enaa.ok.flag"
 PHASE1_LOG="$OUTDIR/nextflow.stdout"
 
-$NEXTFLOW_BIN pull samstudio8/elan-ena-nextflow # always use latest stable
+$NEXTFLOW_BIN pull climb-covid/elan-ena-nextflow # always use latest stable
 
 if [ ! -f "$PHASE1_OK_FLAG" ]; then
     RESUME_FLAG=""
@@ -36,7 +36,7 @@ if [ ! -f "$PHASE1_OK_FLAG" ]; then
         MSG='{"text":"*COG-UK ENA-A consensus pipeline* Using -resume to re-raise without trashing everything. Delete today'\''s log to force a full restart."}'
         curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
     fi
-    $NEXTFLOW_BIN run samstudio8/elan-ena-nextflow -c $EAGLEOWL_CONF/outbound/ena_assembly.nextflow.conf -r stable --study $COG_ENA_STUDY --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp --description 'COG_ACCESSION:${-> row.published_name}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' $RESUME_FLAG > $PHASE1_LOG
+    $NEXTFLOW_BIN run climb-covid/elan-ena-nextflow -c $EAGLEOWL_CONF/outbound/ena_assembly.nextflow.conf -r stable --study $COG_ENA_STUDY --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp --description 'COG_ACCESSION:${-> row.published_name}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' $RESUME_FLAG > $PHASE1_LOG
     ret=$?
     if [ $ret -ne 0 ]; then
         lines=`tail -n 25 $PHASE1_LOG`
