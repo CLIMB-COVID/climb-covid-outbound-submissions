@@ -20,4 +20,4 @@ cp $DATESTAMP.accessions.tsv $ARTIFACTS_ROOT/accessions/latest.accessions.tsv
 chmod 644 $ARTIFACTS_ROOT/accessions/latest.accessions.tsv
 
 # Dump to s3
-s3cmd put --acl-public $ARTIFACTS_ROOT/accessions/latest.accessions.tsv s3://cog-uk/accessions/latest.tsv
+s3cmd --config $EAGLEOWL_CONF/outbound/s3cfg put --acl-public $ARTIFACTS_ROOT/accessions/latest.accessions.tsv s3://cog-uk/accessions/latest.tsv
