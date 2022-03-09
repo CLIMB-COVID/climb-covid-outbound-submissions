@@ -1,7 +1,10 @@
-source ~/.ocarina
+source /cephfs/covid/software/eagle-owl/scripts/hootstrap.sh
+source "$EAGLEOWL_CONF/common.sh"
+source "$EAGLEOWL_CONF/slack.sh"
+PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/ena"
 
 DATESTAMP=$1
-OUTDIR=$COG_OUTBOUND_DIR/ena-a/$DATESTAMP
+OUTDIR=$OUTBOUND_DIR/ena-a/$DATESTAMP
 cd $OUTDIR
 
 AUTHORS=`tail -n+2 accessions.ls | cut -f1 -d' ' | cut -f3 -d'/' | cut -f1 -d':' | sort | uniq -c | sort -n`
