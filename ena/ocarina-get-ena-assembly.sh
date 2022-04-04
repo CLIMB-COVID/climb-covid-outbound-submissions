@@ -21,4 +21,8 @@ ocarina --env --oauth get pag --test-name 'cog-uk-elan-minimal-qc' --pass --priv
     --ofield qc.cog_uk_elan_minimal_qc cog_basic_qc 'XXX' \
     --ofield qc.cog_uk_high_quality_public cog_high_qc 'XXX' \
     --ofield accession.ena-sample.primary_accession ena_sample_id '' \
-    --ofield accession.ena-run.primary_accession ena_run_id '' > ena-assembly.csv 2> err
+    --ofield accession.ena-run.primary_accession ena_run_id ''\
+    --ofield min_ct min_ct_value '' \
+    --ofield max_ct max_ct_value '' \
+    --ofield collection_date collection_date '2020' \
+    --ofield received_date received_date '' > ena-assembly.csv 2> err
