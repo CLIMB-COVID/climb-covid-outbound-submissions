@@ -18,7 +18,7 @@ OUTDIR=$OUTBOUND_DIR/ena-a/$DATESTAMP
 if  [ ! -z "$OUTBOUND_TEST" ]; then
     TEST_FLAG="--test"
     SLACK_HOOK=$SLACK_TEST_HOOK
-    OUTDIR=$EAGLEOWL/scratch/ena_test/$DATESTAMP
+    OUTDIR=$EAGLEOWL/scratch/ena_test/ena-a/$DATESTAMP
 fi
 
 mkdir -p $OUTBOUND_DIR/ena-a/$DATESTAMP
