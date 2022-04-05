@@ -9,7 +9,7 @@ new_fields = [
 
 select = csv.DictReader(open(sys.argv[1]), delimiter=",")
 
-out = csv.DictWriter(sys.stdout, select.fieldnames + new_fields, delimiter=",")
+out = csv.DictWriter(sys.stdout, select.fieldnames + new_fields, delimiter="\t")
 out.writeheader()
 
 for row in select:
