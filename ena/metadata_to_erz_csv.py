@@ -19,13 +19,13 @@ for row in select:
         continue
 
     # ERS and ERR must be set to allow proper linkage in ENA
-    if len(row["ena_sample_id"]) == 0 or row["ena_sample_id"].lower() == "unknown":
-        sys.stderr.write("[NOTE][NO-ERS] %s\n" % row["published_name"])
-        continue
+    # if len(row["ena_sample_id"]) == 0 or row["ena_sample_id"].lower() == "unknown":
+    #     sys.stderr.write("[NOTE][NO-ERS] %s\n" % row["published_name"])
+    #     continue
 
-    if len(row["ena_run_id"]) == 0 or row["ena_run_id"].lower() == "unknown":
-        sys.stderr.write("[NOTE][NO-ERR] %s\n" % row["published_name"])
-        continue
+    # if len(row["ena_run_id"]) == 0 or row["ena_run_id"].lower() == "unknown":
+    #     sys.stderr.write("[NOTE][NO-ERR] %s\n" % row["published_name"])
+    #     continue
 
     # Assign the magic identifier
     row["assemblyname"] = "COG-UK.%s#%s" % (
