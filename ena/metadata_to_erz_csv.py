@@ -7,9 +7,9 @@ new_fields = [
     "program",
 ]
 
-select = csv.DictReader(open(sys.argv[1]), delimiter=',')
+select = csv.DictReader(open(sys.argv[1]), delimiter=",")
 
-out = csv.DictWriter(sys.stdout, select.fieldnames + new_fields, delimiter='\t')
+out = csv.DictWriter(sys.stdout, select.fieldnames + new_fields, delimiter=",")
 out.writeheader()
 
 for row in select:
@@ -28,10 +28,13 @@ for row in select:
         continue
 
     # Assign the magic identifier
-    row["assemblyname"] = "COG-UK.%s#%s" % (row["central_sample_id"], row["published_uuid"].split('-')[0])
+    row["assemblyname"] = "COG-UK.%s#%s" % (
+        row["central_sample_id"],
+        row["published_uuid"].split("-")[0],
+    )
 
     # Program name and version
-    if len(row["assembler_version"]) == 0 or row["assembler_version"] == '0':
+    if len(row["assembler_version"]) == 0 or row["assembler_version"] == "0":
         version = ""
     else:
         version = row["assembler_version"]
