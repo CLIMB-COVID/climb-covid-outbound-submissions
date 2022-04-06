@@ -25,7 +25,7 @@ if  [ ! -z "$OUTBOUND_TEST" ]; then
     OCARINA_PROFILE="test-service-outbound"
 fi
 
-mkdir -p $OUTBOUND_DIR/ena-a/$DATESTAMP
+mkdir -p $OUTDIR
 cd $OUTDIR
 
 if [ ! -f "erz.nf.csv" ]; then
