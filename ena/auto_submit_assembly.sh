@@ -71,7 +71,7 @@ else
 fi
 
 # PUBLISH
-ena_accession_to_majora.py --accessions $OUTDIR/accessions.ls --profile  2> $OUTDIR/majora_accessions.err
+ena_accession_to_majora.py --accessions $OUTDIR/accessions.ls --profile $OCARINA_PROFILE 2> $OUTDIR/majora_accessions.err
 ret=$?
 if [ $ret -ne 0 ]; then
     lines=`tail -n 25 $OUTDIR/majora_accessions.err | sed 's,",,g'`
