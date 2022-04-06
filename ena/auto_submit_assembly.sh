@@ -20,7 +20,6 @@ if  [ ! -z "$OUTBOUND_TEST" ]; then
     TEST_FLAG="--test"
     SLACK_HOOK=$SLACK_TEST_HOOK
     OUTDIR=$EAGLEOWL/scratch/ena_test/ena-a/$DATESTAMP
-    NXF_WORK=$HOME/nxf_work/
     OCARINA_PROFILE="test-service-outbound"
 fi
 
