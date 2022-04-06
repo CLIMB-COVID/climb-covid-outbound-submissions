@@ -15,13 +15,13 @@ WEBIN_JAR="$WEBIN_DIR/webin-cli-4.3.0.jar"
 TEST_FLAG=""
 SLACK_HOOK=$SLACK_MGMT_HOOK
 OUTDIR=$OUTBOUND_DIR/ena-a/$DATESTAMP
-OCARINA_PROFILE="outbound-submissions"
+OCARINA_PROFILE="service-outbound"
 if  [ ! -z "$OUTBOUND_TEST" ]; then
     TEST_FLAG="--test"
     SLACK_HOOK=$SLACK_TEST_HOOK
     OUTDIR=$EAGLEOWL/scratch/ena_test/ena-a/$DATESTAMP
     NXF_WORK=$HOME/nxf_work/
-    OCARINA_PROFILE="test-outbound-submissions"
+    OCARINA_PROFILE="test-service-outbound"
 fi
 
 mkdir -p $OUTBOUND_DIR/ena-a/$DATESTAMP
