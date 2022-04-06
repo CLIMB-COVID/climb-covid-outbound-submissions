@@ -15,11 +15,13 @@ WEBIN_JAR="$WEBIN_DIR/webin-cli-4.3.0.jar"
 TEST_FLAG=""
 SLACK_HOOK=$SLACK_MGMT_HOOK
 OUTDIR=$OUTBOUND_DIR/ena-a/$DATESTAMP
+OCARINA_PROFILE="outbound-submissions"
 if  [ ! -z "$OUTBOUND_TEST" ]; then
     TEST_FLAG="--test"
     SLACK_HOOK=$SLACK_TEST_HOOK
     OUTDIR=$EAGLEOWL/scratch/ena_test/ena-a/$DATESTAMP
     NXF_WORK=$HOME/nxf_work/
+    OCARINA_PROFILE="test-outbound-submissions"
 fi
 
 mkdir -p $OUTBOUND_DIR/ena-a/$DATESTAMP
@@ -69,7 +71,7 @@ else
 fi
 
 # PUBLISH
-ena_accession_to_majora.py --accessions $OUTDIR/accessions.ls 2> $OUTDIR/majora_accessions.err
+ena_accession_to_majora.py --accessions $OUTDIR/accessions.ls --profile  2> $OUTDIR/majora_accessions.err
 ret=$?
 if [ $ret -ne 0 ]; then
     lines=`tail -n 25 $OUTDIR/majora_accessions.err | sed 's,",,g'`
