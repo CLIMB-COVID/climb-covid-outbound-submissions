@@ -52,16 +52,18 @@ echo "Unique FASTA inputs" `cut -f1 $DATESTAMP.ls | sort | uniq | wc -l`
 
 remove_ls_dups_for_now.py $DATESTAMP.ls $DATESTAMP.undup.ls $DATESTAMP.covv.csv $DATESTAMP.undup.csv 2> $DATESTAMP.undup.log
 
+remove_already_uploaded.py $ARTIFACTS_ROOT/accessions/latest.accessions.tsv $DATESTAMP.undup.csv > $DATESTAMP.not_uploaded.csv 2> $DATESTAMP.remove_uploaded.log
+
 rm -f $DATESTAMP.gisaid.fa
 
 IFS=$'\t'; while read fn header;
 do
     elan_rehead.py $fn $header >> $DATESTAMP.gisaid.fa;
-done < $DATESTAMP.undup.ls
+done < $DATESTAMP.not_uploaded.csv
 
 echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
 
-csvcut -C collection_date,received_date,adm1_trans,central_sample_id,pag_name,climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
-echo "Unique samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTAMP.gisaid.csv | sed 1d | wc -l`
+csvcut -C collection_date,received_date,adm1_trans,central_sample_id,pag_name,climb_fn $DATESTAMP.not_uploaded.csv > $DATESTAMP.gisaid.csv
+echo "Unique not already uploaded samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTAMP.gisaid.csv | sed 1d | wc -l`
 
 cut -f1 -d',' $DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'
