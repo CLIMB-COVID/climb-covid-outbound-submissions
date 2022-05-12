@@ -12,7 +12,7 @@ with open(sys.argv[2], "r") as undup_manifest_ls:
         cog_id = gisaid_name.split("/")[2]
         if cog_id in submitted_cog_ids:
             print(
-                f"[NOTE] {gisaid_name} skipped as an artifact for this biosample has been uploaded previously",
+                f"[NOTE] {gisaid_name.rstrip()} skipped as an artifact for this biosample has been uploaded previously",
                 file=sys.stderr,
             )
             continue
