@@ -79,7 +79,7 @@ def do_json_record(record):
 
         if error_data["covv_virus_name"] == "already exists":
             publish_group = strain_to_pag_map.get(strain_id)
-            accession_id = error_data["existing_ids"]
+            accession_id = error_data["existing_ids"][0]
             if accession_id not in gisaid_accessions:
                 send_accession(publish_group, accession_id, strain_id)
         else:
