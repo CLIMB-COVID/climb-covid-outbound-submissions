@@ -47,19 +47,19 @@ ocarina --env --oauth get pag --test-name 'cog-uk-high-quality-public' --pass --
 make_covv_name.py $DATESTAMP.csv > $DATESTAMP.covv.csv
 rm $DATESTAMP.csv
 
-csvcut -c climb_fn,covv_virus_name $DATESTAMP.covv.csv | csvformat -T | sed 1d > $DATESTAMP.ls
+remove_already_uploaded.py $ARTIFACTS_ROOT/accessions/latest.accessions.tsv $DATESTAMP.covv.csv > $DATESTAMP.not_uploaded.csv 2> $DATESTAMP.remove_uploaded.log
+
+csvcut -c climb_fn,covv_virus_name $DATESTAMP.not_uploaded.csv | csvformat -T | sed 1d > $DATESTAMP.ls
 echo "Unique FASTA inputs" `cut -f1 $DATESTAMP.ls | sort | uniq | wc -l`
 
-remove_ls_dups_for_now.py $DATESTAMP.ls $DATESTAMP.undup.ls $DATESTAMP.covv.csv $DATESTAMP.undup.csv 2> $DATESTAMP.undup.log
-
-remove_already_uploaded.py $ARTIFACTS_ROOT/accessions/latest.accessions.tsv $DATESTAMP.undup.csv > $DATESTAMP.not_uploaded.csv 2> $DATESTAMP.remove_uploaded.log
+remove_ls_dups_for_now.py $DATESTAMP.ls $DATESTAMP.undup.ls $DATESTAMP.not_uploaded.csv $DATESTAMP.undup.csv 2> $DATESTAMP.undup.log
 
 rm -f $DATESTAMP.gisaid.fa
 
 IFS=$'\t'; while read fn header;
 do
     elan_rehead.py $fn $header >> $DATESTAMP.gisaid.fa;
-done < $DATESTAMP.not_uploaded.csv
+done < $DATESTAMP.undup.ls
 
 echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
 

@@ -11,12 +11,14 @@ parser.add_argument("--csv", required=True)
 parser.add_argument("--response", required=True)
 parser.add_argument("--response-mode", required=True)
 parser.add_argument("--accessions-table", required=True)
+parser.add_argument("--test-mode", default=False, action="store_true")
 args = parser.parse_args()
 
 # Get a set of Gisaid IDs already in Majora
-with open(args.accessions_table, "r") as accessions_table:
-    gisaid_accessions = set(
-        line.split("\t")[3] for line in accessions_table if len(line.split("\t")[3]) > 0
+with open(args.accessions_table, "r") as accessions_tsv:
+    reader = csv.DictReader(accessions_tsv, delimiter="\t")
+    existing_gisaid_accessions = set(
+        line["gisaid.accession"] for line in reader if line["gisaid.accession"]
     )
 
 # Map the submitted strains to pags
@@ -70,7 +72,13 @@ def do_json_record(record):
         strain_id, accession_id = record["msg"].split(";")
 
         publish_group = strain_to_pag_map.get(strain_id)
-        send_accession(publish_group, accession_id, strain_id)
+        if not args.test_mode:
+            send_accession(publish_group, accession_id, strain_id)
+        else:
+            print(
+                f"{publish_group} would be added to majora if not in test mode as: {accession_id}\t{strain_id}",
+                file=sys.stdout,
+            )
 
     elif record_type == "validation_error":
         strain_id, error, error_json = record["msg"].split(";")
@@ -80,8 +88,14 @@ def do_json_record(record):
         if error_data["covv_virus_name"] == "already exists":
             publish_group = strain_to_pag_map.get(strain_id)
             accession_id = error_data["existing_ids"][0]
-            if accession_id not in gisaid_accessions:
-                send_accession(publish_group, accession_id, strain_id)
+            if accession_id not in existing_gisaid_accessions:
+                if not args.test_mode:
+                    send_accession(publish_group, accession_id, strain_id)
+                else:
+                    print(
+                        f"{publish_group} would be added to majora (as an existing upload not in majora) if not in test mode as: {accession_id}\t{strain_id}",
+                        file=sys.stdout,
+                    )
         else:
             print("[FAIL] Validation error encountered: %s, %s" % (strain_id, error))
 
@@ -108,7 +122,15 @@ elif args.response_mode.lower() == "tsv":
             subm_date = record["covv_subm_date"]
 
             publish_group = strain_to_pag_map.get(strain_id)
-            send_accession(publish_group, accession_id, strain_id, subm_date=subm_date)
+            if not args.test_mode:
+                send_accession(
+                    publish_group, accession_id, strain_id, subm_date=subm_date
+                )
+            else:
+                print(
+                    f"{publish_group} would be added to majora if not in test mode as: {accession_id}\t{strain_id}",
+                    file=sys.stdout,
+                )
 
 else:
     sys.exit(2)
