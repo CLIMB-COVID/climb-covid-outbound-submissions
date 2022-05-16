@@ -92,7 +92,7 @@ def do_json_record(record):
                 if not args.test_mode:
                     send_accession(publish_group, accession_id, strain_id)
                     print(
-                        f"[NOTE] {publish_group} accession added: {strain_id}\t{accession_id}",
+                        f"[NOTE] {accession_id} returned as extant by GISAID",
                         file=sys.stdout,
                     )
                 else:
@@ -131,7 +131,7 @@ elif args.response_mode.lower() == "tsv":
                     publish_group, accession_id, strain_id, subm_date=subm_date
                 )
                 print(
-                    f"[NOTE] {publish_group} accession added: {strain_id}\t{accession_id}",
+                    f"[NOTE] {accession_id} returned as extant by GISAID",
                     file=sys.stdout,
                 )
             else:

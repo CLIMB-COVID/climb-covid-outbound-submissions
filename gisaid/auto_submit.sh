@@ -48,7 +48,7 @@ if [ -f "submission.json" ]; then
     if [ ! -f "submit_accession.log" ]; then
         # Convert the GISAID response to accessions if we haven't already done so
         set +e
-        submission_to_accession.py --response-mode json --response submission.json --csv $DATESTAMP.not_uploaded.csv --accessions-table $ARTIFACTS_ROOT/accessions/latest.accessions.tsv > submit_accession.log
+        submission_to_accession.py --response-mode json --response submission.json --csv $DATESTAMP.undup.csv --accessions-table $ARTIFACTS_ROOT/accessions/latest.accessions.tsv > submit_accession.log
         subret=$?
         set -e
         echo "submit_accession done"
