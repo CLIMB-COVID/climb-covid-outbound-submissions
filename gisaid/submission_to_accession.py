@@ -91,6 +91,10 @@ def do_json_record(record):
             if accession_id not in existing_gisaid_accessions:
                 if not args.test_mode:
                     send_accession(publish_group, accession_id, strain_id)
+                    print(
+                        f"[NOTE] {publish_group} accession added: {strain_id}\t{accession_id}",
+                        file=sys.stdout,
+                    )
                 else:
                     print(
                         f"{publish_group} would be added to majora (as an existing upload not in majora) if not in test mode as: {accession_id}\t{strain_id}",
@@ -125,6 +129,10 @@ elif args.response_mode.lower() == "tsv":
             if not args.test_mode:
                 send_accession(
                     publish_group, accession_id, strain_id, subm_date=subm_date
+                )
+                print(
+                    f"[NOTE] {publish_group} accession added: {strain_id}\t{accession_id}",
+                    file=sys.stdout,
                 )
             else:
                 print(
