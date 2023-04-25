@@ -10,7 +10,8 @@ eval "$(conda shell.bash hook)"
 conda activate $CONDA_OUTBOUND
 
 DATESTAMP=$1
-WEBIN_JAR="$WEBIN_DIR/webin-cli-4.3.0.jar"
+BEFORE_DATESTAMP=`date -d "$DATESTAMP -7 days" '+%Y-%m-%d'`
+WEBIN_JAR="$WEBIN_DIR/webin-cli-5.2.0.jar"
 
 NXF_WORK="/data/temp/nxf_work"
 
@@ -29,9 +30,16 @@ mkdir -p $OUTDIR
 cd $OUTDIR
 
 if [ ! -f "erz.nf.csv" ]; then
-    ocarina-get-ena-assembly.sh
+    ocarina-get-ena-assembly.sh $BEFORE_DATESTAMP
     metadata_to_erz_csv.py ena-assembly.csv > erz.nf.csv 2> make_csv.log
 fi
+
+#Exit early with 0 status if there is no work to do
+N_UPLOADS=$(wc -l erz.nf.csv | awk '{print $1 - 1}')
+if (( $N_UPLOADS < 1 )); then
+    exit 0
+fi
+
 
 # Send
 PHASE1_OK_FLAG="$OUTDIR/enaa.ok.flag"
@@ -49,7 +57,7 @@ if [ ! -f "$PHASE1_OK_FLAG" ]; then
         curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
     fi
     $NEXTFLOW_BIN run climb-covid/elan-ena-nextflow -c $EAGLEOWL_CONF/outbound/ena_assembly.nextflow.conf -r pyena-dev --study $COG_ENA_STUDY \
-    --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp $TEST_FLAG \
+    --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls $TEST_FLAG \
     --description 'COG_ACCESSION:${-> row.published_name}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' \
     $RESUME_FLAG > $PHASE1_LOG
     ret=$?

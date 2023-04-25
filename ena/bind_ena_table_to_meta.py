@@ -51,6 +51,14 @@ select = csv.DictReader(open(sys.argv[1]), delimiter=',')
 out = csv.DictWriter(sys.stdout, select.fieldnames + new_fields, delimiter='\t')
 out.writeheader()
 for row in select:
+    if not row["collection_date"]:
+        row["collection_date"] = row["received_date"]
+        
+    # ERS must already exist in ENA
+    if len(row["ena_sample_id"]) == 0 or row["ena_sample_id"].lower() == "unknown":
+        sys.stderr.write("[NOTE][NO-ERS] %s\n" % row["published_name"])
+        continue  
+      
     cog = row["published_name"].split('/')[1]
     run = row["published_name"].split(':')[1]
 

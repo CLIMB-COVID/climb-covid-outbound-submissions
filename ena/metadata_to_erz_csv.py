@@ -13,6 +13,9 @@ out = csv.DictWriter(sys.stdout, select.fieldnames + new_fields, delimiter="\t")
 out.writeheader()
 
 for row in select:
+    if not row["collection_date"]:
+        row["collection_date"] = row["received_date"]
+    
     # Assembler must be set for submission
     if len(row["assembler"]) == 0 or row["assembler"].lower() == "unknown":
         sys.stderr.write("[NOTE][NO-ASM] %s\n" % row["published_name"])

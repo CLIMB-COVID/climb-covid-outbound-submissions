@@ -26,6 +26,12 @@ else
     echo "ocarina already done"
 fi
 
+#Exit early with 0 status if there is no work to do
+N_UPLOADS=$(wc -l $DATESTAMP.gisaid.csv | awk '{print $1 - 1}')
+if (( $N_UPLOADS < 1 )); then
+    exit 0
+fi
+
 # Send to GISAID through new API
 # Resubmitting everything isn't ideal as it just wastes a bunch of time using gisaid_uploader which is pretty slow (as it transfers each genome one by one and signs all the requests)
 # but it's easier than having to post-process the GISAID CSV to remove the successful candidates (and determine whether the failed ones should be resent)

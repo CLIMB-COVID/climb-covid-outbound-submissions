@@ -2,13 +2,13 @@
 # NotImplementedError
 exit 78 # EX_CONFIG
 
-source ~/.bootstrap.sh
+source /cephfs/covid/software/eagle-owl/scripts/hootstrap.sh
 
-source "$EAGLEOWL_CONF/webin.env" # adds PATH and WEBIN vars
-source "$EAGLEOWL_CONF/paths.env"
-source "$EAGLEOWL_CONF/slack.env"
-source "$EAGLEOWL_CONF/envs.env"
-source "$EAGLEOWL_CONF/service_outbound.env"
+source "$EAGLEOWL_CONF/outbound/webin.sh" # adds PATH and WEBIN vars
+source "$EAGLEOWL_CONF/common.sh"
+source "$EAGLEOWL_CONF/slack.sh"
+# source "$EAGLEOWL_CONF/envs.env"
+source "$EAGLEOWL_CONF/ocarina/service_outbound.sh"
 export PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/ena"
 
 eval "$(conda shell.bash hook)"
