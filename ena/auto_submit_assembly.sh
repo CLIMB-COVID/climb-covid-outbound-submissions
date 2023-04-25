@@ -11,7 +11,7 @@ conda activate $CONDA_OUTBOUND
 
 DATESTAMP=$1
 BEFORE_DATESTAMP=`date -d "$DATESTAMP -7 days" '+%Y-%m-%d'`
-WEBIN_JAR="$WEBIN_DIR/webin-cli-5.2.0.jar"
+WEBIN_JAR="$WEBIN_DIR/webin-cli-6.3.0.jar"
 
 NXF_WORK="/data/temp/nxf_work"
 
