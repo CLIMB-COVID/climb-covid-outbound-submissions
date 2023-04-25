@@ -17,9 +17,9 @@ for row in select:
         row["collection_date"] = row["received_date"]
     
     # Assembler must be set for submission
-    if len(row["assembler"]) == 0 or row["assembler"].lower() == "unknown":
-        sys.stderr.write("[NOTE][NO-ASM] %s\n" % row["published_name"])
-        continue
+    # if len(row["assembler"]) == 0 or row["assembler"].lower() == "unknown":
+    #     sys.stderr.write("[NOTE][NO-ASM] %s\n" % row["published_name"])
+    #     continue
 
     # ERS and ERR must be set to allow proper linkage in ENA
     # if len(row["ena_sample_id"]) == 0 or row["ena_sample_id"].lower() == "unknown":
@@ -41,5 +41,9 @@ for row in select:
         version = ""
     else:
         version = row["assembler_version"]
-    row["program"] = "%s %s" % (row["assembler"], row["assembler_version"])
+
+    if len(row["assembler"]) == 0 or row["assembler"] == "0":
+        assembler = "Unknown"
+
+    row["program"] = "%s %s" % (assembler, version)
     out.writerow(row)
