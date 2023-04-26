@@ -45,7 +45,7 @@ for row in select:
     if len(row["assembler"]) == 0 or row["assembler"] == "0":
         assembler = "Unknown"
     else:
-        assembler = row["assember"]
+        assembler = row["assembler"]
 
     row["program"] = "%s %s" % (assembler, version)
     out.writerow(row)
