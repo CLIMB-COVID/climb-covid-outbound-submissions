@@ -37,6 +37,8 @@ for row in select:
     )
 
     row["address"] = row["address"].replace("'", "")
+    row["center_name"] = row["center_name"].replace("'", "")
+    row["authors"] = row["authors"].replace("'", "")
 
     # Program name and version
     if len(row["assembler_version"]) == 0 or row["assembler_version"] == "0":
