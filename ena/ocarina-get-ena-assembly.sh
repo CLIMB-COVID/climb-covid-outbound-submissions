@@ -9,6 +9,7 @@ ocarina --env --oauth get pag --test-name 'cog-uk-elan-minimal-qc' --pass --priv
     --ffield-true owner_org_ena_assembly_opted \
     --ofield credit_code credit_code 'XXX' \
     --ofield collection_date collection_date '' \
+    --ofield published_date published_date 'XXX' \
     --ofield received_date received_date '' \
     --ofield - adm0 'United Kingdom' \
     --ofield adm1_trans adm1 'XXX' \
@@ -17,6 +18,7 @@ ocarina --env --oauth get pag --test-name 'cog-uk-elan-minimal-qc' --pass --priv
     --ofield credit_lab_list authors 'XXX' \
     --ofield '~{instrument_make} {instrument_model}' platform 'XXX' \
     --ofield central_sample_id central_sample_id 'XXX' \
+    --ofield anonymous_sample_id anonymous_sample_id '' \
     --ofield published_name published_name 'XXX' \
     --ofield published_uuid published_uuid 'XXX' \
     --ofield consensus.current_path climb_fn 'XXX' \

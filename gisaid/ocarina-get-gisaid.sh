@@ -13,6 +13,7 @@ ocarina --env --oauth get pag --test-name 'cog-uk-high-quality-public' --pass --
     --ofield central_sample_id central_sample_id 'XXX' \
     --ofield adm1_trans adm1_trans 'XXX' \
     --ofield received_date received_date 'XXX' \
+    --ofield published_date published_date 'XXX' \
     --ofield published_name pag_name 'XXX' \
     --ofield collection_date collection_date 'XXX' \
     --ofield owner_org_gisaid_user submitter 'XXX' \
@@ -39,6 +40,7 @@ ocarina --env --oauth get pag --test-name 'cog-uk-high-quality-public' --pass --
     --ofield credit_lab_name covv_orig_lab 'XXX' \
     --ofield credit_lab_addr covv_orig_lab_addr 'XXX' \
     --ofield central_sample_id covv_provider_sample_id '' \
+    --ofield anonymous_sample_id anonymous_sample_id '' \
     --ofield - covv_subm_lab 'COVID-19 Genomics UK (COG-UK) Consortium' \
     --ofield - covv_subm_lab_addr 'United Kingdom' \
     --ofield central_sample_id covv_subm_sample_id 'XXX' \

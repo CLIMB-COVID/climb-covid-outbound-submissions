@@ -12,6 +12,7 @@ conda activate $CONDA_OUTBOUND
 DATESTAMP=$1
 BEFORE_DATESTAMP=`date -d "$DATESTAMP -7 days" '+%Y-%m-%d'`
 WEBIN_JAR="$WEBIN_DIR/webin-cli-6.3.0.jar"
+BATCH_SIZE=40000
 
 NXF_WORK="/data/temp/nxf_work"
 
@@ -31,7 +32,8 @@ cd $OUTDIR
 
 if [ ! -f "erz.nf.csv" ]; then
     ocarina-get-ena-assembly.sh $BEFORE_DATESTAMP
-    metadata_to_erz_csv.py ena-assembly.csv > erz.nf.csv 2> make_csv.log
+    metadata_to_erz_csv.py ena-assembly.csv 2> make_csv.log | head -n $BATCH_SIZE > erz.nf.csv 
+
 fi
 
 #Exit early with 0 status if there is no work to do
