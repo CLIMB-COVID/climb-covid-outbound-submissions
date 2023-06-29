@@ -39,7 +39,7 @@ for service in SERVICES:
 out_csv = csv.DictWriter(sys.stdout, delimiter="\t", fieldnames=header)
 out_csv.writeheader()
 
-anon_samp_id_date = datetime.datetime(2023, 6, 20).date()
+anon_samp_id_date = datetime.datetime(2023, 6, 30).date()
 
 json_data = json.load(JSON_MANIFEST)
 for pag in json_data:
