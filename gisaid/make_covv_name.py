@@ -39,10 +39,7 @@ for row in gisaid_csv:
     if not collection_date_or_year:
         collection_date_or_year = collected_or_received_year
 
-    if (
-        datetime.datetime.strptime(row["published_date"], "%Y-%m-%d").date()
-        >= anon_samp_id_date
-    ):
+    if datetime.strptime(row["published_date"], "%Y-%m-%d").date() >= anon_samp_id_date:
         if not row["anonymous_sample_id"]:
             print(
                 f"[NOTE] {row['central_sample_id']} skipped as it does not appear to have an anonymous_sample_id despite being ingested on/after 2023-06-30",
