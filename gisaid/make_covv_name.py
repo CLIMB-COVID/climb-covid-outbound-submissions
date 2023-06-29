@@ -8,6 +8,7 @@ CSV_FN = sys.argv[1]
 csv_fh = open(CSV_FN)
 gisaid_csv = csv.DictReader(csv_fh)
 
+anon_samp_id_date = datetime(2023, 06, 30).date()
 
 out_csv = csv.DictWriter(sys.stdout, gisaid_csv.fieldnames)
 out_csv.writeheader()
@@ -34,9 +35,25 @@ for row in gisaid_csv:
 
     if not collection_date_or_year:
         collection_date_or_year = collected_or_received_year
+    
+    if (
+        datetime.datetime.strptime(row["published_date"], "%Y-%m-%d").date()
+        >= anon_samp_id_date
+    ):
+        if not row["anonymous_sample_id"]:
+            print(
+                f"[NOTE] {row['central_sample_id']} skipped as it does not appear to have an anonymous_sample_id despite being ingested on/after 2023-06-30",
+                file=sys.stderr,
+            )
+            continue
 
-    #TODO Future we can perhaps use this opportunity to generate alternative names for when there are multiple submissions
-    row["covv_virus_name"] = "hCoV-19/%s/%s/%d" % (row["adm1_trans"].replace('_', ' '), row["central_sample_id"], collected_or_received_year)
+        #TODO Future we can perhaps use this opportunity to generate alternative names for when there are multiple submissions
+        row["covv_virus_name"] = "hCoV-19/%s/%s/%d" % (row["adm1_trans"].replace('_', ' '), row["anonymous_sample_id"], collected_or_received_year)
+    
+    else:
+        row["covv_virus_name"] = "hCoV-19/%s/%s/%d" % (row["adm1_trans"].replace('_', ' '), row["central_sample_id"], collected_or_received_year)    
+    
+    
     row["covv_collection_date"] = collection_date_or_year
 
 

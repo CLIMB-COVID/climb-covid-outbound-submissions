@@ -26,18 +26,4 @@ with open(sys.argv[2], "r") as gisaid_covv_csv:
             )
             continue
 
-        if (
-            datetime.datetime.strptime(line["published_date"], "%Y-%m-%d").date()
-            >= anon_samp_id_date
-        ):
-            if not line["anonymous_sample_id"]:
-                print(
-                    f"[NOTE] {line['covv_virus_name']} skipped as it does not appear to have an anonymous_sample_id despite being ingested on/after 2023-06-30",
-                    file=sys.stderr,
-                )
-                continue
-            line["covv_virus_name"] = line["anonymous_sample_id"]
-            line["central_sample_id"] = line["anonymous_sample_id"]
-
-        else:
-            writer.writerow(line)
+        writer.writerow(line)
