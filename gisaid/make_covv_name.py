@@ -8,7 +8,7 @@ CSV_FN = sys.argv[1]
 csv_fh = open(CSV_FN)
 gisaid_csv = csv.DictReader(csv_fh)
 
-anon_samp_id_date = datetime(2023, 6, 20).date()
+anon_samp_id_date = datetime(2023, 6, 30).date()
 
 out_csv = csv.DictWriter(sys.stdout, gisaid_csv.fieldnames)
 out_csv.writeheader()
