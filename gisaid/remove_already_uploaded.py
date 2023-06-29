@@ -16,8 +16,6 @@ with open(sys.argv[2], "r") as gisaid_covv_csv:
     writer = csv.DictWriter(sys.stdout, fieldnames=reader.fieldnames, delimiter=",")
     writer.writeheader()
 
-    anon_samp_id_date = datetime.datetime(2023, 6, 30).date()
-
     for line in reader:
         if line["central_sample_id"] in submitted_cog_ids:
             print(

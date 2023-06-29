@@ -65,7 +65,7 @@ done < $DATESTAMP.undup.ls
 
 echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
 
-csvcut -C collection_date,received_date,adm1_trans,central_sample_id,pag_name,climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
+csvcut -C collection_date,received_date,adm1_trans,central_sample_id,anonymous_sample_id,published_date,pag_name,climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
 echo "Unique not already uploaded samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTAMP.gisaid.csv | sed 1d | wc -l`
 
 cut -f1 -d',' $DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'

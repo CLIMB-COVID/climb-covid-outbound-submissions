@@ -8,7 +8,7 @@ CSV_FN = sys.argv[1]
 csv_fh = open(CSV_FN)
 gisaid_csv = csv.DictReader(csv_fh)
 
-anon_samp_id_date = datetime(2023, 6, 30).date()
+anon_samp_id_date = datetime(2023, 6, 20).date()
 
 out_csv = csv.DictWriter(sys.stdout, gisaid_csv.fieldnames)
 out_csv.writeheader()
@@ -53,6 +53,9 @@ for row in gisaid_csv:
             row["anonymous_sample_id"],
             collected_or_received_year,
         )
+        row["central_sample_id"] = row["anonymous_sample_id"]
+        row["covv_provider_sample_id"] = row["anonymous_sample_id"]
+        row["covv_subm_sample_id"] = row["anonymous_sample_id"]
 
     else:
         row["covv_virus_name"] = "hCoV-19/%s/%s/%d" % (
