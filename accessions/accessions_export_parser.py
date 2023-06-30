@@ -51,5 +51,5 @@ with open(sys.argv[1], "rt") as accession_fh, open(sys.argv[2], "wt") as out_fh:
             row["ena_run.accession"],
             row["ena_run.secondary_accession"],
             row["ena_assembly.accession"],
-            row["ena_assembly.secondary_accesion"],
+            row["ena_assembly.secondary_accession"],
         )
