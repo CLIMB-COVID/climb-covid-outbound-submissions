@@ -15,13 +15,13 @@ with open(sys.argv[1], "rt") as accession_fh, open(sys.argv[2], "wt") as out_fh:
             "central_sample_id",
             "run_name",
             "gisaid.accession",
-            "gisaid.secondary_accesion",
+            "gisaid.secondary_accession",
             "ena_sample.accession",
             "ena_sample.secondary_accession",
             "ena_run.accession",
             "ena_run.secondary_accession",
             "ena_assembly.accession",
-            "ena_assembly.secondary_accesion",
+            "ena_assembly.secondary_accession",
         ],
     )
 
