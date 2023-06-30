@@ -42,14 +42,18 @@ with open(sys.argv[1], "rt") as accession_fh, open(sys.argv[2], "wt") as out_fh:
             row["central_sample_id"] = row["anonymous_sample_id"]
 
         writer.writerow(
-            row["central_sample_id"],
-            row["run_name"],
-            row["gisaid.accession"],
-            row["gisaid.secondary_accession"],
-            row["ena_sample.accession"],
-            row["ena_sample.secondary_accession"],
-            row["ena_run.accession"],
-            row["ena_run.secondary_accession"],
-            row["ena_assembly.accession"],
-            row["ena_assembly.secondary_accession"],
+            {
+                "central_sample_id": row["central_sample_id"],
+                "run_name": row["run_name"],
+                "gisaid.accession": row["gisaid.accession"],
+                "gisaid.secondary_accession": row["gisaid.secondary_accession"],
+                "ena_sample.accession": row["ena_sample.accession"],
+                "ena_sample.secondary_accession": row["gisaid.secondary_accession"],
+                "ena_run.accession": row["ena_run.accession"],
+                "ena_run.secondary_accession": row["ena_run.secondary_accession"],
+                "ena_assembly.accession": row["ena_assembly.accession"],
+                "ena_assembly.secondary_accession": row[
+                    "ena_assembly.secondary_accession"
+                ],
+            }
         )
