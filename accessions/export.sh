@@ -20,6 +20,7 @@ if [ ! -f "$DATESTAMP.accessions.csv" ]; then
         --ofield central_sample_id central_sample_id 'XXX' \
         --ofield anonymous_sample_id anonymous_sample_id '' \
         --ofield published_date published_date 'XXX' \
+        --ofield run_name run_name '' \
         --ofield accession.gisaid.primary_accession gisaid.accession '' \
         --ofield accession.gisaid.secondary_accession gisaid.secondary_accession '' \
         --ofield accession.ena-sample.primary_accession ena_sample.accession '' \
