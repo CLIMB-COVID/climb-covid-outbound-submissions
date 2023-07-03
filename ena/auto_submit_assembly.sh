@@ -85,20 +85,20 @@ else
 fi
 
 # PUBLISH
-ena_accession_to_majora.py --accessions $OUTDIR/accessions.ls --profile $OCARINA_PROFILE 2> $OUTDIR/majora_accessions.err
-ret=$?
-if [ $ret -ne 0 ]; then
-    lines=`tail -n 25 $OUTDIR/majora_accessions.err | sed 's,",,g'`
-    MSG='{"text":"*COG-UK ENA-A consensus pipeline finished...*
-    ...with exit status '"$ret"'
-    '"\`\`\`${lines}\`\`\`"'"
-    }'
-    curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
-    exit $ret
-fi
+# ena_accession_to_majora.py --accessions $OUTDIR/accessions.ls --profile $OCARINA_PROFILE 2> $OUTDIR/majora_accessions.err
+# ret=$?
+# if [ $ret -ne 0 ]; then
+#     lines=`tail -n 25 $OUTDIR/majora_accessions.err | sed 's,",,g'`
+#     MSG='{"text":"*COG-UK ENA-A consensus pipeline finished...*
+#     ...with exit status '"$ret"'
+#     '"\`\`\`${lines}\`\`\`"'"
+#     }'
+#     curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
+#     exit $ret
+# fi
 
-MSG='{"text":"*COG-UK ENA-A consensus pipeline* Accessions added successfully."}'
-curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
+# MSG='{"text":"*COG-UK ENA-A consensus pipeline* Accessions added successfully."}'
+# curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
 
 # Tell everyone what a good job we did
 outbound-enaconsensus-announce.sh $DATESTAMP
