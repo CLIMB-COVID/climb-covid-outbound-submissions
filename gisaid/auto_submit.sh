@@ -29,6 +29,7 @@ fi
 #Exit early with 0 status if there is no work to do
 N_UPLOADS=$(wc -l $DATESTAMP.gisaid.csv | awk '{print $1 - 1}')
 if (( $N_UPLOADS < 1 )); then
+    echo "Nothing to upload, exiting early"
     exit 0
 fi
 
