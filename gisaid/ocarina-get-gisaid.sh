@@ -63,7 +63,10 @@ do
     elan_rehead.py $fn $header >> $DATESTAMP.gisaid.fa;
 done < $DATESTAMP.undup.ls
 
-echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
+#Exit early with 0 status if there is no work to do
+if [ -f "$DATESTAMP.gisaid.fa" ]; then
+    echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
+fi
 
 csvcut -C collection_date,received_date,adm1_trans,central_sample_id,anonymous_sample_id,published_date,pag_name,climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
 echo "Unique not already uploaded samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTAMP.gisaid.csv | sed 1d | wc -l`
