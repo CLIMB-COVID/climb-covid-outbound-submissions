@@ -2,11 +2,26 @@
 import sys
 import csv
 import datetime
+import os
 
 new_fields = [
     "assemblyname",
     "program",
 ]
+
+with open(
+    f"{os.getenv('ARTIFACTS_ROOT')}/elan/latest/majora.metadata.matched.tsv", "rt"
+) as metadata_fh:
+    reader = csv.DictReader(metadata_fh, delimiter="\t")
+
+    if "meta.webin.failed" in reader.fieldnames:
+        webin_failed = set(
+            row["central_sample_id"]
+            for row in reader
+            if row["meta.webin.failed"] == "TRUE"
+        )
+    else:
+        webin_failed = set()
 
 select = csv.DictReader(open(sys.argv[1]), delimiter=",")
 
@@ -19,6 +34,9 @@ to_submit = {}
 anon_samp_id_date = datetime.datetime(2023, 6, 30).date()
 
 for row in select:
+    if row["central_sample_id"] in webin_failed:
+        continue
+
     if not row["collection_date"]:
         row["collection_date"] = row["received_date"]
 

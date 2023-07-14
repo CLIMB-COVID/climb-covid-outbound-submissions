@@ -18,6 +18,7 @@ ocarina --env --oauth get pag --test-name 'cog-uk-elan-minimal-qc' --pass --priv
     --ofield credit_lab_list authors 'XXX' \
     --ofield '~{instrument_make} {instrument_model}' platform 'XXX' \
     --ofield central_sample_id central_sample_id 'XXX' \
+    --ofield central_sample_id biosample_id 'XXX' \    
     --ofield anonymous_sample_id anonymous_sample_id '' \
     --ofield published_name published_name 'XXX' \
     --ofield published_uuid published_uuid 'XXX' \
