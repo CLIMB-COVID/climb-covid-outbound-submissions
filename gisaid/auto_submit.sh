@@ -26,6 +26,13 @@ else
     echo "ocarina already done"
 fi
 
+#Exit early with 0 status if there is no work to do
+N_UPLOADS=$(wc -l $DATESTAMP.gisaid.csv | awk '{print $1 - 1}')
+if (( $N_UPLOADS < 1 )); then
+    echo "Nothing to upload, exiting early"
+    exit 0
+fi
+
 # Send to GISAID through new API
 # Resubmitting everything isn't ideal as it just wastes a bunch of time using gisaid_uploader which is pretty slow (as it transfers each genome one by one and signs all the requests)
 # but it's easier than having to post-process the GISAID CSV to remove the successful candidates (and determine whether the failed ones should be resent)
@@ -48,7 +55,7 @@ if [ -f "submission.json" ]; then
     if [ ! -f "submit_accession.log" ]; then
         # Convert the GISAID response to accessions if we haven't already done so
         set +e
-        submission_to_accession.py --response-mode json --response submission.json --csv $DATESTAMP.covv.csv > submit_accession.log
+        submission_to_accession.py --response-mode json --response submission.json --csv $DATESTAMP.undup.csv --accessions-table $ARTIFACTS_ROOT/accessions/latest.accessions.tsv > submit_accession.log
         subret=$?
         set -e
         echo "submit_accession done"

@@ -5,6 +5,13 @@ PATH="$PATH:$OUTBOUND_SOFTWARE_DIR/ena"
 
 DATESTAMP=$1
 OUTDIR=$OUTBOUND_DIR/ena-a/$DATESTAMP
+
+SLACK_HOOK=$SLACK_OUTBOUND_HOOK
+if  [ ! -z "$OUTBOUND_TEST" ]; then
+    SLACK_HOOK=$SLACK_TEST_HOOK
+    OUTDIR=$EAGLEOWL/scratch/ena_test/ena-a/$DATESTAMP
+fi
+
 cd $OUTDIR
 
 AUTHORS=`tail -n+2 accessions.ls | cut -f1 -d' ' | cut -f3 -d'/' | cut -f1 -d':' | sort | uniq -c | sort -n`
@@ -20,5 +27,5 @@ MSG='{"text":"<!channel>
 See https://docs.covid19.climb.ac.uk/ena_consensus for how to opt-in
 "}'
 
-curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_OUTBOUND_HOOK
+curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
 

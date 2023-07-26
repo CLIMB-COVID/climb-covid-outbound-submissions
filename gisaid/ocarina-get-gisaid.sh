@@ -13,6 +13,7 @@ ocarina --env --oauth get pag --test-name 'cog-uk-high-quality-public' --pass --
     --ofield central_sample_id central_sample_id 'XXX' \
     --ofield adm1_trans adm1_trans 'XXX' \
     --ofield received_date received_date 'XXX' \
+    --ofield published_date published_date 'XXX' \
     --ofield published_name pag_name 'XXX' \
     --ofield collection_date collection_date 'XXX' \
     --ofield owner_org_gisaid_user submitter 'XXX' \
@@ -39,6 +40,7 @@ ocarina --env --oauth get pag --test-name 'cog-uk-high-quality-public' --pass --
     --ofield credit_lab_name covv_orig_lab 'XXX' \
     --ofield credit_lab_addr covv_orig_lab_addr 'XXX' \
     --ofield central_sample_id covv_provider_sample_id '' \
+    --ofield anonymous_sample_id anonymous_sample_id '' \
     --ofield - covv_subm_lab 'COVID-19 Genomics UK (COG-UK) Consortium' \
     --ofield - covv_subm_lab_addr 'United Kingdom' \
     --ofield central_sample_id covv_subm_sample_id 'XXX' \
@@ -47,10 +49,12 @@ ocarina --env --oauth get pag --test-name 'cog-uk-high-quality-public' --pass --
 make_covv_name.py $DATESTAMP.csv > $DATESTAMP.covv.csv
 rm $DATESTAMP.csv
 
-csvcut -c climb_fn,covv_virus_name $DATESTAMP.covv.csv | csvformat -T | sed 1d > $DATESTAMP.ls
+remove_already_uploaded.py $ARTIFACTS_ROOT/accessions/latest.accessions.tsv $DATESTAMP.covv.csv > $DATESTAMP.not_uploaded.csv 2> $DATESTAMP.remove_uploaded.log
+
+csvcut -c climb_fn,covv_virus_name $DATESTAMP.not_uploaded.csv | csvformat -T | sed 1d > $DATESTAMP.ls
 echo "Unique FASTA inputs" `cut -f1 $DATESTAMP.ls | sort | uniq | wc -l`
 
-remove_ls_dups_for_now.py $DATESTAMP.ls $DATESTAMP.undup.ls $DATESTAMP.covv.csv $DATESTAMP.undup.csv 2> $DATESTAMP.undup.log
+remove_ls_dups_for_now.py $DATESTAMP.ls $DATESTAMP.undup.ls $DATESTAMP.not_uploaded.csv $DATESTAMP.undup.csv 2> $DATESTAMP.undup.log
 
 rm -f $DATESTAMP.gisaid.fa
 
@@ -59,9 +63,12 @@ do
     elan_rehead.py $fn $header >> $DATESTAMP.gisaid.fa;
 done < $DATESTAMP.undup.ls
 
-echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
+#Exit early with 0 status if there is no work to do
+if [ -f "$DATESTAMP.gisaid.fa" ]; then
+    echo "Unique sequences output to FASTA" `grep '^>' $DATESTAMP.gisaid.fa | sort | uniq | wc -l`
+fi
 
-csvcut -C collection_date,received_date,adm1_trans,central_sample_id,pag_name,climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
-echo "Unique samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTAMP.gisaid.csv | sed 1d | wc -l`
+csvcut -C collection_date,received_date,adm1_trans,central_sample_id,anonymous_sample_id,published_date,pag_name,climb_fn $DATESTAMP.undup.csv > $DATESTAMP.gisaid.csv
+echo "Unique not already uploaded samples in GISAID metadata" `csvcut -c covv_subm_sample_id $DATESTAMP.gisaid.csv | sed 1d | wc -l`
 
 cut -f1 -d',' $DATESTAMP.gisaid.csv | sort | uniq -c | grep -v 'submitter'

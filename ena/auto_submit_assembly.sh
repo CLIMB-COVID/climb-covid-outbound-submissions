@@ -10,16 +10,38 @@ eval "$(conda shell.bash hook)"
 conda activate $CONDA_OUTBOUND
 
 DATESTAMP=$1
-WEBIN_JAR="$WEBIN_DIR/webin-cli-4.3.0.jar"
+BEFORE_DATESTAMP=`date -d "$DATESTAMP -7 days" '+%Y-%m-%d'`
+WEBIN_JAR="$WEBIN_DIR/webin-cli-6.3.0.jar"
+BATCH_SIZE=25000
 
-mkdir -p $OUTBOUND_DIR/ena-a/$DATESTAMP
+NXF_WORK="/data/temp/nxf_work"
+
+TEST_FLAG=""
+SLACK_HOOK=$SLACK_MGMT_HOOK
 OUTDIR=$OUTBOUND_DIR/ena-a/$DATESTAMP
+OCARINA_PROFILE="service-outbound"
+if  [ ! -z "$OUTBOUND_TEST" ]; then
+    TEST_FLAG="--test"
+    SLACK_HOOK=$SLACK_TEST_HOOK
+    OUTDIR=$EAGLEOWL/scratch/ena_test/ena-a/$DATESTAMP
+    OCARINA_PROFILE="test-service-outbound"
+fi
+
+mkdir -p $OUTDIR
 cd $OUTDIR
 
 if [ ! -f "erz.nf.csv" ]; then
-    ocarina-get-ena-assembly.sh
-    metadata_to_erz_csv.py ena-assembly.csv > erz.nf.csv 2> make_csv.log
+    ocarina-get-ena-assembly.sh $BEFORE_DATESTAMP
+    metadata_to_erz_csv.py ena-assembly.csv 2> make_csv.log > erz.unbatched.nf.csv
+    head -n $BATCH_SIZE erz.unbatched.nf.csv > erz.nf.csv
 fi
+
+#Exit early with 0 status if there is no work to do
+N_UPLOADS=$(wc -l erz.nf.csv | awk '{print $1 - 1}')
+if (( $N_UPLOADS < 1 )); then
+    exit 0
+fi
+
 
 # Send
 PHASE1_OK_FLAG="$OUTDIR/enaa.ok.flag"
@@ -34,9 +56,12 @@ if [ ! -f "$PHASE1_OK_FLAG" ]; then
         # If the log exists, resume
         RESUME_FLAG="-resume"
         MSG='{"text":"*COG-UK ENA-A consensus pipeline* Using -resume to re-raise without trashing everything. Delete today'\''s log to force a full restart."}'
-        curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
+        curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
     fi
-    $NEXTFLOW_BIN run climb-covid/elan-ena-nextflow -c $EAGLEOWL_CONF/outbound/ena_assembly.nextflow.conf -r stable --study $COG_ENA_STUDY --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp --description 'COG_ACCESSION:${-> row.published_name}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' $RESUME_FLAG > $PHASE1_LOG
+    $NEXTFLOW_BIN run climb-covid/elan-ena-nextflow -c $EAGLEOWL_CONF/outbound/ena_assembly.nextflow.conf -r stable --study $COG_ENA_STUDY \
+    --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp $TEST_FLAG \
+    --description 'COG_ACCESSION:${-> row.published_name}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' \
+    $RESUME_FLAG > $PHASE1_LOG
     ret=$?
     if [ $ret -ne 0 ]; then
         lines=`tail -n 25 $PHASE1_LOG`
@@ -50,30 +75,30 @@ if [ ! -f "$PHASE1_OK_FLAG" ]; then
     ...with exit status '"$ret"'
     '"\`\`\`${lines}\`\`\`"'"
     }'
-    curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
+    curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
     if [ $ret -ne 0 ]; then
         exit $ret;
     fi
 else
     MSG='{"text":"*COG-UK ENA pipeline* Cowardly skipping ENA-A as the OK flag already exists for today"}'
-    curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
+    curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
 fi
 
 # PUBLISH
-ena_accession_to_majora.py --accessions $OUTDIR/accessions.ls 2> $OUTDIR/majora_accessions.err
-ret=$?
-if [ $ret -ne 0 ]; then
-    lines=`tail -n 25 $OUTDIR/majora_accessions.err | sed 's,",,g'`
-    MSG='{"text":"*COG-UK ENA-A consensus pipeline finished...*
-    ...with exit status '"$ret"'
-    '"\`\`\`${lines}\`\`\`"'"
-    }'
-    curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
-    exit $ret
-fi
+# ena_accession_to_majora.py --accessions $OUTDIR/accessions.ls --profile $OCARINA_PROFILE 2> $OUTDIR/majora_accessions.err
+# ret=$?
+# if [ $ret -ne 0 ]; then
+#     lines=`tail -n 25 $OUTDIR/majora_accessions.err | sed 's,",,g'`
+#     MSG='{"text":"*COG-UK ENA-A consensus pipeline finished...*
+#     ...with exit status '"$ret"'
+#     '"\`\`\`${lines}\`\`\`"'"
+#     }'
+#     curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
+#     exit $ret
+# fi
 
-MSG='{"text":"*COG-UK ENA-A consensus pipeline* Accessions added successfully."}'
-curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_MGMT_HOOK
+# MSG='{"text":"*COG-UK ENA-A consensus pipeline* Accessions added successfully."}'
+# curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
 
 # Tell everyone what a good job we did
 outbound-enaconsensus-announce.sh $DATESTAMP
