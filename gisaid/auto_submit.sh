@@ -12,7 +12,7 @@ conda activate $CONDA_OUTBOUND
 set -euo pipefail
 
 DATESTAMP=$DATE # date sent from mqtt with --payload-passthrough
-BEFORE_DATESTAMP=`date -d "$DATESTAMP -7 days" '+%Y-%m-%d'`
+BEFORE_DATESTAMP=`date -d "$DATESTAMP -2 days" '+%Y-%m-%d'`
 echo $DATESTAMP $BEFORE_DATESTAMP
 
 OUTDIR=$OUTBOUND_DIR/gisaid/$DATESTAMP
