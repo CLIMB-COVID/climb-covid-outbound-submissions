@@ -24,7 +24,7 @@ MSG='{"text":"<!channel>
 ***
 *Submissions by sequencing site code*
 '"\`\`\`${AUTHORS}\`\`\`"'
-See https://docs.covid19.climb.ac.uk/ena_consensus for how to opt-in
+See https://docs.covid19.climb.ac.uk/ena_consensus for more details 
 "}'
 
 curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
