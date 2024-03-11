@@ -38,11 +38,11 @@ fi
 # but it's easier than having to post-process the GISAID CSV to remove the successful candidates (and determine whether the failed ones should be resent)
 gisaidret=0
 if [ ! -f "submission.json" ]; then
-    gisaid_uploader -a $EAGLEOWL_TOKENS/GISAID_AUTH CoV authenticate --cid $GISAID_REAL_CID --user $GISAID_USER --pass $GISAID_PASS
+    # gisaid_uploader -a $EAGLEOWL_TOKENS/GISAID_AUTH CoV authenticate --cid $GISAID_REAL_CID --user $GISAID_USER --pass $GISAID_PASS
     
     set +e
     # Allow for failure to make sure that submissions are submitted in the case of partial failure
-    gisaid_uploader -a $EAGLEOWL_TOKENS/GISAID_AUTH -l submission.json -L submission.bk.json CoV upload --fasta $DATESTAMP.gisaid.fa --csv $DATESTAMP.gisaid.csv --failedout $DATESTAMP.gisaid.failed.csv
+    covCLI upload --clientid $GISAID_REAL_CID --username $GISAID_USER --password $GISAID_PASS --log submission.json --fasta $DATESTAMP.gisaid.fa --metadata $DATESTAMP.gisaid.csv
     gisaidret=$?
     set -e
     
@@ -55,7 +55,7 @@ if [ -f "submission.json" ]; then
     if [ ! -f "submit_accession.log" ]; then
         # Convert the GISAID response to accessions if we haven't already done so
         set +e
-        submission_to_accession.py --response-mode json --response submission.json --csv $DATESTAMP.undup.csv --accessions-table $ARTIFACTS_ROOT/accessions/latest.accessions.tsv > submit_accession.log
+        submission_to_accession.py --response submission.json --csv $DATESTAMP.undup.csv --accessions-table $ARTIFACTS_ROOT/accessions/latest.accessions.tsv > submit_accession.log
         subret=$?
         set -e
         echo "submit_accession done"
