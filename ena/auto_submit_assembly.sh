@@ -11,7 +11,8 @@ conda activate $CONDA_OUTBOUND
 
 DATESTAMP=$1
 BEFORE_DATESTAMP=`date -d "$DATESTAMP -2 days" '+%Y-%m-%d'`
-WEBIN_JAR="$WEBIN_DIR/webin-cli-6.3.0.jar"
+#WEBIN_JAR="$WEBIN_DIR/webin-cli-6.3.0.jar"
+WEBIN_JAR="$WEBIN_DIR/webin-cli-8.1.1.jar"
 BATCH_SIZE=25000
 
 NXF_WORK="/data/temp/nxf_work"
@@ -59,7 +60,7 @@ if [ ! -f "$PHASE1_OK_FLAG" ]; then
         curl -X POST -H 'Content-type: application/json' --data "$MSG" $SLACK_HOOK
     fi
     $NEXTFLOW_BIN run climb-covid/elan-ena-nextflow -c $EAGLEOWL_CONF/outbound/ena_assembly.nextflow.conf -r stable --study $COG_ENA_STUDY \
-    --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls --ascp $TEST_FLAG \
+    --manifest erz.nf.csv --webin_jar $WEBIN_JAR --out $OUTDIR/accessions.ls $TEST_FLAG --java $JAVA_PATH \
     --description 'COG_ACCESSION:${-> row.assemblyname}; COG_BASIC_QC:${-> row.cog_basic_qc}; COG_HIGH_QC:${-> row.cog_high_qc}; COG_NOTE:Sample metadata and QC flags may have been updated since deposition in public databases. COG-UK recommends users refer to data.covid19.climb.ac.uk for latest metadata and QC tables before conducting analysis.' \
     $RESUME_FLAG > $PHASE1_LOG
     ret=$?
